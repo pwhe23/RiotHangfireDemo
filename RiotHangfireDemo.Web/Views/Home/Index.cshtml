@@ -3,7 +3,8 @@
 
 }
 <form method="post">
-    <button formaction="@Url.Action(nameof(HomeController.QueueEmail))" class="btn btn-primary">Queue Email</button>
+    <button formaction="@Url.Action(nameof(HomeController.EnqueueEmail))" class="btn btn-primary">Enqueue Email</button>
+    <button formaction="@Url.Action(nameof(HomeController.EnqueueReport))" class="btn btn-primary">Enqueue Report</button>
 </form>
 <table class="table">
     <thead>

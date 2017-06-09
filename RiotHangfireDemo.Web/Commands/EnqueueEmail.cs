@@ -2,9 +2,9 @@
 
 namespace RiotHangfireDemo
 {
-    public class CreateFakeEmail : IRequest<Unit>
+    public class EnqueueEmail : IRequest<Unit>
     {
-        internal class Handler : IRequestHandler<CreateFakeEmail, Unit>
+        internal class Handler : IRequestHandler<EnqueueEmail, Unit>
         {
             private readonly IQueue _queue;
 
@@ -13,7 +13,7 @@ namespace RiotHangfireDemo
                 _queue = queue;
             }
 
-            public Unit Handle(CreateFakeEmail message)
+            public Unit Handle(EnqueueEmail cmd)
             {
                 var name = Faker.Name.FullName();
 
@@ -21,11 +21,10 @@ namespace RiotHangfireDemo
                 {
                     To = Faker.Internet.Email(name),
                     Subject = Faker.Company.BS(),
-                    Body = $"Hello {name}," + Faker.Lorem.Paragraph(),
                 });
 
                 return Unit.Value;
             }
-        }
+        };
     };
 }

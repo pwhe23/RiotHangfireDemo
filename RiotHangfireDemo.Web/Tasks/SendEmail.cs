@@ -8,10 +8,9 @@ namespace RiotHangfireDemo
     {
         public string To { get; set; }
         public string Subject { get; set; }
-        public string Body { get; set; }
         public string Name => $"{nameof(SendEmail)}-{To}";
 
-        internal sealed class Handler : IRequestHandler<SendEmail, TaskResult>
+        internal class Handler : IRequestHandler<SendEmail, TaskResult>
         {
             private static readonly Random _random = new Random();
 
@@ -28,6 +27,6 @@ namespace RiotHangfireDemo
                     Log = $"Sent email '{cmd.Subject}' to {cmd.To}",
                 };
             }
-        }
+        };
     };
 }

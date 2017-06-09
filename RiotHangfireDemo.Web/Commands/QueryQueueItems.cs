@@ -9,7 +9,7 @@ namespace RiotHangfireDemo
         public int? PageNumber { get; set; }
         public int? PageSize { get; set; }
 
-        internal sealed class Handler : IRequestHandler<QueryQueueItems, PagedList<QueueItem>>
+        internal class Handler : IRequestHandler<QueryQueueItems, PagedList<QueueItem>>
         {
             private readonly IDb _db;
 

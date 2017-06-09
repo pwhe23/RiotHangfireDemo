@@ -147,9 +147,11 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CreateFakeEmail.cs" />
+    <Compile Include="Commands\EnqueueEmail.cs" />
+    <Compile Include="Commands\EnqueueReport.cs" />
     <Compile Include="Commands\QueryQueueItems.cs" />
     <Compile Include="Services\Time.cs" />
+    <Compile Include="Tasks\GenerateReport.cs" />
     <Compile Include="Utility\Extensions.cs" />
     <Compile Include="Utility\PagedList.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -159,7 +161,7 @@
     <Compile Include="Services\Ioc.cs" />
     <Compile Include="Services\Queue.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Tasks\Task.cs" />
+    <Compile Include="Tasks\ITask.cs" />
     <Compile Include="Tasks\SendEmail.cs" />
     <Compile Include="Utility\Url.cs" />
   </ItemGroup>

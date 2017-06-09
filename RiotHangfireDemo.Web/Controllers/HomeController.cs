@@ -18,7 +18,13 @@ namespace RiotHangfireDemo
             return View(result);
         }
 
-        public ActionResult QueueEmail(CreateFakeEmail cmd)
+        public ActionResult EnqueueEmail(EnqueueEmail cmd)
+        {
+            _mediator.Send(cmd);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public ActionResult EnqueueReport(EnqueueReport cmd)
         {
             _mediator.Send(cmd);
             return RedirectToAction(nameof(Index));
