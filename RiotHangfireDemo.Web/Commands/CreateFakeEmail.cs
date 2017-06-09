@@ -6,9 +6,9 @@ namespace RiotHangfireDemo
     {
         internal class Handler : IRequestHandler<CreateFakeEmail, Unit>
         {
-            private readonly Queue _queue;
+            private readonly IQueue _queue;
 
-            public Handler(Queue queue)
+            public Handler(IQueue queue)
             {
                 _queue = queue;
             }

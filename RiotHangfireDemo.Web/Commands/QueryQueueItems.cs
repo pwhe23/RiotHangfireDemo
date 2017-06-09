@@ -11,9 +11,9 @@ namespace RiotHangfireDemo
 
         internal sealed class Handler : IRequestHandler<QueryQueueItems, PagedList<QueueItem>>
         {
-            private readonly DemoDb _db;
+            private readonly IDb _db;
 
-            public Handler(DemoDb db)
+            public Handler(IDb db)
             {
                 _db = db;
             }
@@ -21,7 +21,7 @@ namespace RiotHangfireDemo
             public PagedList<QueueItem> Handle(QueryQueueItems cmd)
             {
                 var queueItems = _db
-                    .QueueItems
+                    .Query<QueueItem>()
                     .AsQueryable();
 
                 if (cmd.Status != null)

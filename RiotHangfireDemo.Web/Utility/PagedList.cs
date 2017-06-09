@@ -11,37 +11,35 @@ namespace RiotHangfireDemo
 
     public class PagedList<T>
     {
-        public PagedList(IEnumerable<T> items, int pageNumber, int totalItems)
-        {
-            Items = items ?? new T[0];
-            PageNumber = pageNumber;
-            TotalItems = totalItems;
-        }
-
-        public IEnumerable<T> Items { get; }
-        public int PageNumber { get; }
-        public int TotalItems { get; }
+        public IEnumerable<T> Items { get; set; }
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
+        public int TotalItems { get; set; }
     };
 
     public static class PagedList
     {
         public static PagedList<T> ToPagedList<T>(this IOrderedQueryable<T> query, IPageable cmd)
         {
-            if (!cmd.PageNumber.HasValue || cmd.PageNumber < 1)
-                cmd.PageNumber = 1;
+            var list = new PagedList<T>
+            {
+                PageNumber = !cmd.PageNumber.HasValue || cmd.PageNumber < 1 ? 1 : cmd.PageNumber.Value,
+                PageSize = !cmd.PageSize.HasValue || cmd.PageSize < 1 || cmd.PageSize > 1000 ? 10 : cmd.PageSize.Value
+            };
 
-            if (!cmd.PageSize.HasValue)
-                cmd.PageSize = 10;
 
-            var recordsToSkip = cmd.PageNumber > 1 ? (cmd.PageNumber.Value - 1) * cmd.PageSize.Value : 0;
+            var recordsToSkip = list.PageNumber > 1 ? (list.PageNumber - 1) * list.PageSize : 0;
 
             var result = query
                 .Skip(recordsToSkip)
-                .Take(cmd.PageSize.Value)
+                .Take(list.PageSize)
                 .GroupBy(x => new { Total = query.Count() })
                 .FirstOrDefault();
 
-            return new PagedList<T>(result, cmd.PageNumber.Value, result?.Key.Total ?? 0);
+            list.Items = (IEnumerable<T>)result ?? new T[0];
+            list.TotalItems = result?.Key.Total ?? 0;
+
+            return list;
         }
     };
 }

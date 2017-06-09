@@ -18,7 +18,7 @@ namespace RiotHangfireDemo
             return View(result);
         }
 
-        public ActionResult AddTask(CreateFakeEmail cmd)
+        public ActionResult QueueEmail(CreateFakeEmail cmd)
         {
             _mediator.Send(cmd);
             return RedirectToAction(nameof(Index));

@@ -2,8 +2,8 @@
 @{
 
 }
-<form action="@Url.Action(nameof(HomeController.AddTask))" method="post">
-    <button type="submit" class="btn btn-primary">Add Task</button>
+<form method="post">
+    <button formaction="@Url.Action(nameof(HomeController.QueueEmail))" class="btn btn-primary">Queue Email</button>
 </form>
 <table class="table">
     <thead>
@@ -55,7 +55,7 @@
         @if (Model.PageNumber > 1)
         {
             <li>
-                <a href="@(Request.Path + "?PageNumber=" + (Model.PageNumber - 1))" aria-label="Previous">
+                <a href="@(new Url(Request.Url).Add(nameof(QueryQueueItems.PageNumber), Model.PageNumber - 1))" aria-label="Previous">
                     <span aria-hidden="true">&larr; Previous</span>
                 </a>
             </li>
@@ -69,17 +69,28 @@
             </li>
         }
         <li class="active">
-            <span>@Model.PageNumber <span class="sr-only">(current)</span></span>
+            <span>Page @Model.PageNumber <span class="sr-only">(current)</span></span>
         </li>
         <li class="disabled">
             <span>
-                <span aria-hidden="true">Total: @Model.TotalItems</span>
+                <span aria-hidden="true">@Model.TotalItems Total Item(s)</span>
             </span>
         </li>
-        <li>
-            <a href="@(Request.Path + "?PageNumber=" + (Model.PageNumber + 1))" aria-label="Next">
-                <span aria-hidden="true">Next &rarr;</span>
-            </a>
-        </li>
+        @if (Model.PageNumber * Model.PageSize >= Model.TotalItems)
+        {
+            <li class="disabled">
+                <span aria-label="Next">
+                    <span aria-hidden="true">Next &rarr;</span>
+                </span>
+            </li>
+        }
+        else
+        {
+            <li>
+                <a href="@(new Url(Request.Url).Add(nameof(QueryQueueItems.PageNumber), Model.PageNumber + 1))" aria-label="Next">
+                    <span aria-hidden="true">Next &rarr;</span>
+                </a>
+            </li>
+        }
     </ul>
 </nav>

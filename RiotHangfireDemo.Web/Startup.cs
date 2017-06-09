@@ -1,4 +1,7 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -41,9 +44,12 @@ namespace RiotHangfireDemo
                 new WebRequestLifestyle()
             );
 
+            foreach (var service in GetInterfacesWithSingleImplementation(typeof(Startup).Assembly))
+            {
+                container.Register(service.Key, service.Value, lifestyle);
+            }
+
             container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
-            container.Register<DemoDb>(lifestyle);
-            container.Register<Queue>();
 
             return container;
         }
@@ -89,6 +95,30 @@ namespace RiotHangfireDemo
 
             app.UseHangfireDashboard();
             app.UseHangfireServer();
+        }
+
+        private static Dictionary<Type, Type> GetInterfacesWithSingleImplementation(Assembly assembly)
+        {
+            return assembly
+                .GetExportedTypes()
+                .Where(x => x.IsClass
+                            && !x.IsAbstract)
+                .SelectMany(x => x
+                    .GetInterfaces()
+                    .Where(i => i.Assembly == assembly)
+                    .Select(i => new
+                    {
+                        Implementation = x,
+                        Interface = i,
+                    })
+                )
+                .GroupBy(x => x.Interface, (k, g) => new
+                {
+                    Interface = k,
+                    Implemenations = g.Select(y => y.Implementation).ToArray(),
+                })
+                .Where(x => x.Implemenations.Length == 1)
+                .ToDictionary(x => x.Interface, x => x.Implemenations[0]);
         }
     };
 }

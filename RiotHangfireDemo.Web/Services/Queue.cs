@@ -8,15 +8,23 @@ using Newtonsoft.Json;
 
 namespace RiotHangfireDemo
 {
-    public class Queue
+    public interface IQueue
     {
-        private readonly DemoDb _db;
-        private readonly IMediator _mediator;
+        void Enqueue(ITask task);
+        void Execute(QueueItem queueItem);
+    };
 
-        public Queue(DemoDb db, IMediator mediator)
+    public class Queue : IQueue
+    {
+        private readonly IDb _db;
+        private readonly IMediator _mediator;
+        private readonly ITime _time;
+
+        public Queue(IDb db, IMediator mediator, ITime time)
         {
             _db = db;
             _mediator = mediator;
+            _time = time;
         }
 
         public void Enqueue(ITask task)
@@ -28,12 +36,12 @@ namespace RiotHangfireDemo
             {
                 Name = task.Name,
                 Status = QueueItem.QUEUED,
-                Created = DateTime.Now,
+                Created = _time.Now(),
                 Type = task.GetType().FullName,
                 Data = JsonConvert.SerializeObject(task),
             };
 
-            _db.QueueItems.Add(queuedTask);
+            _db.Add(queuedTask);
             _db.SaveChanges();
 
             BackgroundJob.Enqueue(() => ExecuteQueueItem(queuedTask.Id));
@@ -44,21 +52,21 @@ namespace RiotHangfireDemo
         {
             using (Ioc.BeginScope())
             {
-                var db = Ioc.Get<DemoDb>();
-                var queue = Ioc.Get<Queue>();
+                var db = Ioc.Get<IDb>();
+                var queue = Ioc.Get<IQueue>();
 
                 var task = db
-                    .QueueItems
+                    .Query<QueueItem>()
                     .Single(x => x.Id == queueItemId);
 
                 queue.Execute(task);
             }
         }
 
-        private void Execute(QueueItem queueItem)
+        public void Execute(QueueItem queueItem)
         {
             queueItem.Status = QueueItem.RUNNING;
-            queueItem.Started = DateTime.Now;
+            queueItem.Started = _time.Now();
             _db.SaveChanges();
 
             try
@@ -68,13 +76,13 @@ namespace RiotHangfireDemo
                 var result = (TaskResult)ExecuteCommandViaMediator(task);
 
                 queueItem.Status = QueueItem.COMPLETED;
-                queueItem.Completed = DateTime.Now;
+                queueItem.Completed = _time.Now();
                 queueItem.Log = result.Log;
             }
             catch (Exception ex)
             {
                 queueItem.Status = QueueItem.ERROR;
-                queueItem.Completed = DateTime.Now;
+                queueItem.Completed = _time.Now();
                 queueItem.Log = ex.ToString();
             }
 
