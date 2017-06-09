@@ -22,16 +22,12 @@ namespace RiotHangfireDemo
 
         public void Configuration(IAppBuilder app)
         {
-            ConfigureHangfire(app, Container);
-        }
-
-        public static void Initialize()
-        {
             Container = ConfigureSimpleInjector();
 
-            ConfigureMediatr(Container);
+            ConfigureMediator(Container);
             CongigureEntityFramework();
             ConfigureMvc(Container, RouteTable.Routes);
+            ConfigureHangfire(app, Container);
 
             Container.Verify();
         }
@@ -52,7 +48,7 @@ namespace RiotHangfireDemo
             return container;
         }
 
-        private static void ConfigureMediatr(Container container)
+        private static void ConfigureMediator(Container container)
         {
             var requestType = typeof(IRequestHandler<,>);
             var assemblies = new[] { typeof(Startup).Assembly };

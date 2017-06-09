@@ -12,13 +12,13 @@ namespace RiotHangfireDemo
             _mediator = mediator;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(QueryQueueItems cmd)
         {
-            var tasks = _mediator.Send(new QueryTasks());
-            return View(tasks);
+            var result = _mediator.Send(cmd);
+            return View(result);
         }
 
-        public ActionResult AddTask(AddTask cmd)
+        public ActionResult AddTask(CreateFakeEmail cmd)
         {
             _mediator.Send(cmd);
             return RedirectToAction(nameof(Index));

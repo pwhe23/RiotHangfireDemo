@@ -1,14 +1,34 @@
-﻿@model List<Task>
+﻿@model List<QueueItem>
 @{
 
 }
-<h1>Home</h1>
 <form action="@Url.Action(nameof(HomeController.AddTask))" method="post">
     <button type="submit">Add Task</button>
 </form>
-<ul>
-    @foreach (var task in Model)
-    {
-        <li>@task.Id: @task.Name [@task.Completed]</li>
-    }
-</ul>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Created</th>
+            <th>Started</th>
+            <th>Completed</th>
+            <th>Status</th>
+            <th>Log</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var queueItem in Model)
+        {
+            <tr>
+                <td>@queueItem.Id</td>
+                <td>@queueItem.Name</td>
+                <td>@queueItem.Created</td>
+                <td>@queueItem.Started</td>
+                <td>@queueItem.Completed</td>
+                <td>@queueItem.Status</td>
+                <td><pre>@queueItem.Log</pre></td>
+            </tr>
+        }
+    </tbody>
+</table>
