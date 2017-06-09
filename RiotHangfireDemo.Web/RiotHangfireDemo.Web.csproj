@@ -149,6 +149,7 @@
   <ItemGroup>
     <Compile Include="Commands\CreateFakeEmail.cs" />
     <Compile Include="Commands\QueryQueueItems.cs" />
+    <Compile Include="Utility\PagedList.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Services\DemoDb.cs" />
     <Compile Include="Models\QueueItem.cs" />

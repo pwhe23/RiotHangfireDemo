@@ -1,11 +1,11 @@
-﻿@model List<QueueItem>
+﻿@model PagedList<QueueItem>
 @{
 
 }
 <form action="@Url.Action(nameof(HomeController.AddTask))" method="post">
-    <button type="submit">Add Task</button>
+    <button type="submit" class="btn btn-primary">Add Task</button>
 </form>
-<table border="1">
+<table class="table">
     <thead>
         <tr>
             <th>Id</th>
@@ -18,7 +18,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var queueItem in Model)
+        @foreach (var queueItem in Model.Items)
         {
             <tr>
                 <td>@queueItem.Id</td>
@@ -26,9 +26,60 @@
                 <td>@queueItem.Created</td>
                 <td>@queueItem.Started</td>
                 <td>@queueItem.Completed</td>
-                <td>@queueItem.Status</td>
-                <td><pre>@queueItem.Log</pre></td>
+                <td>
+                    @if (queueItem.Status == QueueItem.ERROR)
+                    {
+                        <span class="label label-danger">@queueItem.Status</span>
+                    }
+                    else if (queueItem.Status == QueueItem.COMPLETED)
+                    {
+                        <span class="label label-success">@queueItem.Status</span>
+                    }
+                    else
+                    {
+                        <span class="label label-warning">@queueItem.Status</span>
+                    }
+                </td>
+                <td>
+                    @if (queueItem.Log != null)
+                    {
+                        <pre>@queueItem.Log</pre>
+                    }
+                </td>
             </tr>
         }
     </tbody>
 </table>
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        @if (Model.PageNumber > 1)
+        {
+            <li>
+                <a href="@(Request.Path + "?PageNumber=" + (Model.PageNumber - 1))" aria-label="Previous">
+                    <span aria-hidden="true">&larr; Previous</span>
+                </a>
+            </li>
+        }
+        else
+        {
+            <li class="disabled">
+                <span aria-label="Previous">
+                    <span aria-hidden="true">&larr; Previous</span>
+                </span>
+            </li>
+        }
+        <li class="active">
+            <span>@Model.PageNumber <span class="sr-only">(current)</span></span>
+        </li>
+        <li class="disabled">
+            <span>
+                <span aria-hidden="true">Total: @Model.TotalItems</span>
+            </span>
+        </li>
+        <li>
+            <a href="@(Request.Path + "?PageNumber=" + (Model.PageNumber + 1))" aria-label="Next">
+                <span aria-hidden="true">Next &rarr;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
