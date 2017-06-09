@@ -12,18 +12,15 @@ namespace RiotHangfireDemo
             _mediator = mediator;
         }
 
-        // GET: Home
         public ActionResult Index()
         {
-            return View();
+            var tasks = _mediator.Send(new QueryTasks());
+            return View(tasks);
         }
 
-        public ActionResult AddTask()
+        public ActionResult AddTask(AddTask cmd)
         {
-            _mediator.Send(new AddTask
-            {
-
-            });
+            _mediator.Send(cmd);
             return RedirectToAction(nameof(Index));
         }
     };

@@ -8,5 +8,7 @@ namespace RiotHangfireDemo
         {
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<DemoDb>());
         }
+
+        public DbSet<Task> Tasks { get; set; }
     };
 }

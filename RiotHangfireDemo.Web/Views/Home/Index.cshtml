@@ -1,4 +1,4 @@
-﻿@model dynamic
+﻿@model List<Task>
 @{
 
 }
@@ -6,3 +6,9 @@
 <form action="@Url.Action(nameof(HomeController.AddTask))" method="post">
     <button type="submit">Add Task</button>
 </form>
+<ul>
+    @foreach (var task in Model)
+    {
+        <li>@task.Id: @task.Name [@task.Completed]</li>
+    }
+</ul>
