@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
+using MediatR;
 
 namespace RiotHangfireDemo
 {
@@ -60,6 +63,45 @@ namespace RiotHangfireDemo
                 return false;
 
             return obj1.Equals(obj2);
+        }
+
+        public static object Execute(this IMediator mediator, object request)
+        {
+            if (request == null)
+                return null;
+
+            try
+            {
+                var requestInterface = request.GetType().GetInterface("IRequest`1");
+                var send = mediator.GetType().GetMethod("Send").MakeGenericMethod(requestInterface.GetGenericArguments());
+                return send.Invoke(mediator, new[] { request });
+            }
+            catch (TargetInvocationException ex)
+            {
+                ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"ERROR on request type {request.GetType()}", ex);
+            }
+
+            return null;
+        }
+
+        public static string ReadToEnd(this Stream stream)
+        {
+            if (stream == null)
+                return null;
+
+            if (stream.CanSeek)
+            {
+                stream.Position = 0;
+            }
+
+            using (var reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
     };
 }

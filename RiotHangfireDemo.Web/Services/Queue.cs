@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.ExceptionServices;
 using Hangfire;
 using MediatR;
 using Newtonsoft.Json;
@@ -73,7 +71,7 @@ namespace RiotHangfireDemo
             {
                 var commandType = Type.GetType(queueItem.Type, true, false);
                 var task = (ITask)JsonConvert.DeserializeObject(queueItem.Data, commandType);
-                var result = (TaskResult)ExecuteCommandViaMediator(task);
+                var result = (TaskResult)_mediator.Execute(task);
 
                 queueItem.Status = QueueItem.COMPLETED;
                 queueItem.Completed = _time.Now();
@@ -87,29 +85,6 @@ namespace RiotHangfireDemo
             }
 
             _db.SaveChanges();
-        }
-
-        private object ExecuteCommandViaMediator(object request)
-        {
-            if (request == null)
-                return null;
-
-            try
-            {
-                var requestInterface = request.GetType().GetInterface("IRequest`1");
-                var send = _mediator.GetType().GetMethod("Send").MakeGenericMethod(requestInterface.GetGenericArguments());
-                return send.Invoke(_mediator, new[] { request });
-            }
-            catch (TargetInvocationException ex)
-            {
-                ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("Queue.Send ERROR on request type " + request.GetType(), ex);
-            }
-
-            return null;
         }
     };
 }

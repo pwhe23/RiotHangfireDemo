@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
 namespace RiotHangfireDemo
 {
@@ -11,7 +10,7 @@ namespace RiotHangfireDemo
 
     public class PagedList<T>
     {
-        public IEnumerable<T> Items { get; set; }
+        public T[] Items { get; set; }
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
         public int TotalItems { get; set; }
@@ -36,7 +35,7 @@ namespace RiotHangfireDemo
                 .GroupBy(x => new { Total = query.Count() })
                 .FirstOrDefault();
 
-            list.Items = (IEnumerable<T>)result ?? new T[0];
+            list.Items = result?.ToArray() ?? new T[0];
             list.TotalItems = result?.Key.Total ?? 0;
 
             return list;
