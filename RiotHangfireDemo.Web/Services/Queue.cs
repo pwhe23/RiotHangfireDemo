@@ -16,12 +16,14 @@ namespace RiotHangfireDemo
     {
         private readonly IDb _db;
         private readonly IMediator _mediator;
+        private readonly IPusher _pusher;
         private readonly ITime _time;
 
-        public Queue(IDb db, IMediator mediator, ITime time)
+        public Queue(IDb db, IMediator mediator, IPusher pusher, ITime time)
         {
             _db = db;
             _mediator = mediator;
+            _pusher = pusher;
             _time = time;
         }
 
@@ -85,6 +87,8 @@ namespace RiotHangfireDemo
             }
 
             _db.SaveChanges();
+
+            _pusher.Push("Refresh");
         }
     };
 }

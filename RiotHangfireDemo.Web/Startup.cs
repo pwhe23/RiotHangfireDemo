@@ -33,6 +33,8 @@ namespace RiotHangfireDemo
             ConfigureMvc(Container, RouteTable.Routes);
             ConfigureHangfire(app, Container);
 
+            app.MapSignalR();
+
             Container.Verify();
         }
 

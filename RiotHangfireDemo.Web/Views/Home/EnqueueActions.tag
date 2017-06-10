@@ -6,13 +6,13 @@
     <script>
         var vm = this;
 
-        vm.EnqueueEmail = function (evnt) {
+        vm.EnqueueEmail = function () {
             jsonRpc("EnqueueEmail", null, function () {
                 vm.parent.trigger("QueueItems.Changed");
             });
         };
 
-        vm.EnqueueReport = function (evnt) {
+        vm.EnqueueReport = function () {
             jsonRpc("EnqueueReport", null, function () {
                 vm.parent.trigger("QueueItems.Changed");
             });

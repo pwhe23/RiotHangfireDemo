@@ -44,6 +44,16 @@
             });
         }
 
+        vm.on("mount", function () {
+            var pushHub = $.connection.pushHub;
+            pushHub.client.push = function (type, data) {
+                switch (type) {
+                    case "Refresh": load(); break;
+                }
+            };
+            $.connection.hub.start();
+        });
+
         vm.on("QueueItems.Changed", function () {
             load();
         });
