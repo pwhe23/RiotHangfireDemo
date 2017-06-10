@@ -135,6 +135,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\riot_compiler.min.js" />
+    <Content Include="Content\scripts.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +167,18 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Riot.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\EnqueueActions.tag" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\ListQueueItems.tag" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Pager.tag" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

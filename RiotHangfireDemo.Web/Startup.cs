@@ -22,6 +22,7 @@ namespace RiotHangfireDemo
     public class Startup
     {
         public static Container Container { get; set; }
+        public static long Version { get; } = DateTime.UtcNow.Ticks;
 
         public void Configuration(IAppBuilder app)
         {
