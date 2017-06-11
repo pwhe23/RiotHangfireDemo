@@ -46,21 +46,14 @@
             vm.hasNext = vm.pageNumber < vm.totalPages;
         });
 
-        vm.previousClicked = function (evnt) {
-            console.log(evnt);
-            evnt.stopPropagation();
-            window.event.cancelBubble=true;
-            vm.parent.trigger('Pager.Clicked', vm.pageNumber - 1);
+        vm.previousClicked = function () {
+            vm.parent.trigger("Pager.Clicked", vm.pageNumber - 1);
         };
 
-        vm.nextClicked = function (evnt) {
-            console.log(evnt);
-            evnt.stopPropagation();
-            window.event.cancelBubble = true;
-            vm.parent.trigger('Pager.Clicked', vm.pageNumber + 1);
+        vm.nextClicked = function () {
+            vm.parent.trigger("Pager.Clicked", vm.pageNumber + 1);
         };
     </script>
-
     <style>
         span.button { cursor:pointer; }
     </style>

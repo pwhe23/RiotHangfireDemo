@@ -174,7 +174,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Tasks\ITask.cs" />
     <Compile Include="Tasks\SendEmail.cs" />
-    <Compile Include="Utility\Random.cs" />
+    <Compile Include="Services\Randomizer.cs" />
     <Compile Include="Utility\SimpleInjectorJobActivator.cs" />
   </ItemGroup>
   <ItemGroup>

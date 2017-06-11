@@ -2,17 +2,21 @@
 @{
 
 }
+
 @foreach (var tag in _tags)
 {
     <script type="riot/tag" src="@tag"></script>
 }
+
 <ListQueueItems />
+
 <script src="/Content/riot_compiler.min.js"></script>
 <script>
     riot.compile(function() {
         riot.mount("*");
     });
 </script>
+
 @functions{
 
     private static readonly string[] _tags = GetTags("~/Views/Home");

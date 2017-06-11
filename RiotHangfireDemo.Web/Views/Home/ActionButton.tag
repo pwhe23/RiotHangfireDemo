@@ -1,5 +1,5 @@
 ﻿<ActionButton>
-    <button type="button" class="btn btn-primary" onclick={ clicked } if={ !!action }>{ text }</button>
+    <button if={ !!action } type="button" class="btn btn-primary" onclick={ clicked }>{ text }</button>
     <script>
         var vm = this;
 

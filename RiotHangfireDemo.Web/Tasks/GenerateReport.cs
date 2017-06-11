@@ -12,19 +12,19 @@ namespace RiotHangfireDemo
 
         internal class Handler : IRequestHandler<GenerateReport, TaskResult>
         {
-            private readonly IRandom _random;
+            private readonly IRandomizer _randomizer;
 
-            public Handler(IRandom random)
+            public Handler(IRandomizer randomizer)
             {
-                _random = random;
+                _randomizer = randomizer;
             }
 
             public TaskResult Handle(GenerateReport cmd)
             {
-                var timeout = TimeSpan.FromSeconds(_random.Next(1, 30));
+                var timeout = TimeSpan.FromSeconds(_randomizer.Next(1, 30));
                 Thread.Sleep(timeout);
 
-                if (_random.Next(1, 7) == 4)
+                if (_randomizer.Next(1, 7) == 4)
                     throw new Exception($"ERROR generating report for {cmd.User}");
 
                 return new TaskResult

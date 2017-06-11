@@ -12,19 +12,19 @@ namespace RiotHangfireDemo
 
         internal class Handler : IRequestHandler<SendEmail, TaskResult>
         {
-            private readonly IRandom _random;
+            private readonly IRandomizer _randomizer;
 
-            public Handler(IRandom random)
+            public Handler(IRandomizer randomizer)
             {
-                _random = random;
+                _randomizer = randomizer;
             }
 
             public TaskResult Handle(SendEmail cmd)
             {
-                var timeout = TimeSpan.FromSeconds(_random.Next(1, 30));
+                var timeout = TimeSpan.FromSeconds(_randomizer.Next(1, 30));
                 Thread.Sleep(timeout);
 
-                if (_random.Next(1, 7) == 4)
+                if (_randomizer.Next(1, 7) == 4)
                     throw new Exception($"ERROR sending email to {cmd.To}");
 
                 return new TaskResult

@@ -30,13 +30,13 @@
                     <span if={ !!item.Completed }>{ moment(item.Completed).diff(moment(item.Started), 'seconds') } sec(s)</span>
                 </td>
                 <td>
-                    <span class="label label-warning" if="{ item.Status == 'Queued' }">{ item.Status }</span>
-                    <span class="label label-info" if="{ item.Status == 'Running' }">{ item.Status } <i class="fa fa-spinner fa-pulse fa-fw"></i></span>
-                    <span class="label label-danger" if="{ item.Status == 'Error' }">{ item.Status }</span>
-                    <span class="label label-success" if="{ item.Status == 'Completed' }">{ item.Status }</span>
+                    <span if="{ item.Status == 'Queued' }" class="label label-warning">{ item.Status }</span>
+                    <span if="{ item.Status == 'Running' }" class="label label-info">{ item.Status } <i class="fa fa-spinner fa-pulse fa-fw"></i></span>
+                    <span if="{ item.Status == 'Error' }" class="label label-danger">{ item.Status }</span>
+                    <span if="{ item.Status == 'Completed' }" class="label label-success">{ item.Status }</span>
                 </td>
                 <td>
-                    <p class="{ small:true, bg-danger:item.Status == 'Error', bg-success:item.Status == 'Completed' }" if={ !!item.Log }>{ item.Log }</p>
+                    <p if={ !!item.Log } class="{ small:true, bg-danger:item.Status == 'Error', bg-success:item.Status == 'Completed' }">{ item.Log }</p>
                 </td>
             </tr>
         </tbody>
