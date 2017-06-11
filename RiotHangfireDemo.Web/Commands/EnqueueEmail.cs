@@ -17,7 +17,7 @@ namespace RiotHangfireDemo
             {
                 var name = Faker.Name.FullName();
 
-                _queue.Enqueue(new SendEmail
+                _queue.Enqueue(new SendEmailTask
                 {
                     To = Faker.Internet.Email(name),
                     Subject = Faker.Company.BS(),

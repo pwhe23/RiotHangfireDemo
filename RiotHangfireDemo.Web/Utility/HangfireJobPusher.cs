@@ -5,11 +5,11 @@ using Hangfire.Storage;
 namespace RiotHangfireDemo
 {
     //REF: http://docs.hangfire.io/en/latest/extensibility/using-job-filters.html
-    public class HangfireLogPushFilter : JobFilterAttribute, IApplyStateFilter
+    public class HangfireJobPusher : JobFilterAttribute, IApplyStateFilter
     {
         private readonly IPusher _pusher;
 
-        public HangfireLogPushFilter(IPusher pusher)
+        public HangfireJobPusher(IPusher pusher)
         {
             _pusher = pusher;
         }

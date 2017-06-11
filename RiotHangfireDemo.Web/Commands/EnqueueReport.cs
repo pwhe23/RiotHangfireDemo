@@ -17,7 +17,7 @@ namespace RiotHangfireDemo
             {
                 var name = Faker.Name.FullName();
 
-                _queue.Enqueue(new GenerateReport
+                _queue.Enqueue(new GenerateReportTask
                 {
                     User = Faker.Internet.UserName(name),
                     Title = Faker.Company.BS(),

@@ -87,7 +87,7 @@ namespace RiotHangfireDemo
             GlobalConfiguration.Configuration
                 .UseSqlServerStorage(nameof(DemoDb))
                 .UseActivator(new SimpleInjectorJobActivator(Container, Lifestyle.Scoped))
-                .UseFilter(new HangfireLogPushFilter(Container.GetInstance<IPusher>()));
+                .UseFilter(new HangfireJobPusher(Container.GetInstance<IPusher>()));
 
             app.UseHangfireServer(new BackgroundJobServerOptions
             {

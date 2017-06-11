@@ -1,12 +1,12 @@
 ﻿<ListQueueItems>
-    <div if={ result.Items.length == 0 && !result.PageNumber } class="lead">
+    <div if="{ result.Items.length == 0 && !result.PageNumber }" class="lead">
         <i class="fa fa-spinner fa-pulse fa-fw"></i> Loading
     </div>
     <div>
         <ActionButton action="EnqueueEmail" text="Enqueue Email" />
         <ActionButton action="EnqueueReport" text="Enqueue Report" />
     </div>
-    <table if={ result.Items.length > 0 } class="table table-hover">
+    <table if={ result.Items.length > 0 } class="table table-hover small">
         <thead>
             <tr>
                 <th>Id</th>
@@ -36,7 +36,7 @@
                     <span if="{ item.Status == 'Completed' }" class="label label-success">{ item.Status }</span>
                 </td>
                 <td>
-                    <p if={ !!item.Log } class="{ small:true, bg-danger:item.Status == 'Error', bg-success:item.Status == 'Completed' }">{ item.Log }</p>
+                    <p if={ !!item.Log } class="{ bg-danger:item.Status == 'Error', bg-success:item.Status == 'Completed' }">{ item.Log }</p>
                 </td>
             </tr>
         </tbody>
@@ -44,7 +44,7 @@
     <Pager page-number={ result.PageNumber } page-size={ result.PageSize } total-items={ result.TotalItems } />
     <script>
         var vm = this;
-        vm.queryQueueItems = { PageNumber:1, PageSize:20 };
+        vm.queryQueueItems = { PageNumber:1, PageSize:10 };
         vm.result = { Items:[] };
 
         function load() {
@@ -74,6 +74,6 @@
         load();
     </script>
     <style>
-        p { padding:.5em; }
+        table p { padding:.5em; margin:0; }
     </style>
 </ListQueueItems>
