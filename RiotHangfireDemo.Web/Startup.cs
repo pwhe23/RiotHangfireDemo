@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Hangfire;
-using Hangfire.SimpleInjector;
 using MediatR;
 using Microsoft.Owin;
 using Owin;
@@ -21,49 +18,44 @@ namespace RiotHangfireDemo
 {
     public class Startup
     {
-        public static Container Container { get; set; }
-        public static long Version { get; } = DateTime.UtcNow.Ticks;
+        private static readonly Container Container = new Container();
+        public static string Version { get; } = Guid.NewGuid().ToString("N");
 
         public void Configuration(IAppBuilder app)
         {
-            Container = ConfigureSimpleInjector();
-
-            ConfigureMediator(Container);
+            ConfigureSimpleInjector();
+            ConfigureMediator();
             CongigureEntityFramework();
-            ConfigureMvc(Container, RouteTable.Routes);
-            ConfigureHangfire(app, Container);
-
-            app.MapSignalR();
+            ConfigureMvc(RouteTable.Routes);
+            ConfigureHangfire(app);
+            ConfigureSignalr(app);
 
             Container.Verify();
         }
 
-        private static Container ConfigureSimpleInjector()
+        private static void ConfigureSimpleInjector()
         {
-            var container = new Container();
-
-            var lifestyle = Lifestyle.CreateHybrid(() => HttpContext.Current == null,
+            Container.Options.DefaultScopedLifestyle = Lifestyle.CreateHybrid(() => HttpContext.Current == null,
                 new ThreadScopedLifestyle(),
                 new WebRequestLifestyle()
             );
 
-            foreach (var service in GetInterfacesWithSingleImplementation(typeof(Startup).Assembly))
+            var services = typeof(Startup).Assembly.GetInterfacesWithSingleImplementation();
+            foreach (var service in services)
             {
-                container.Register(service.Key, service.Value, lifestyle);
+                Container.Register(service.Key, service.Value, Lifestyle.Scoped);
             }
 
-            container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
-
-            return container;
+            Container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
         }
 
-        private static void ConfigureMediator(Container container)
+        private static void ConfigureMediator()
         {
             var requestType = typeof(IRequestHandler<,>);
             var assemblies = new[] { typeof(Startup).Assembly };
 
-            container.Register(requestType, assemblies);
-            container.RegisterSingleton<IMediator>(() => new Mediator(container.GetInstance, container.GetAllInstances));
+            Container.Register(requestType, assemblies);
+            Container.RegisterSingleton<IMediator>(() => new Mediator(Container.GetInstance, Container.GetAllInstances));
         }
 
         private static void CongigureEntityFramework()
@@ -74,7 +66,7 @@ namespace RiotHangfireDemo
             }
         }
 
-        private static void ConfigureMvc(Container container, RouteCollection routes)
+        private static void ConfigureMvc(RouteCollection routes)
         {
             AreaRegistration.RegisterAllAreas();
 
@@ -86,42 +78,28 @@ namespace RiotHangfireDemo
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
 
-            DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
+            DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(Container));
         }
 
         //REF: http://docs.hangfire.io/en/latest/quick-start.html
-        private static void ConfigureHangfire(IAppBuilder app, Container container)
+        private static void ConfigureHangfire(IAppBuilder app)
         {
             GlobalConfiguration.Configuration
                 .UseSqlServerStorage(nameof(DemoDb))
-                .UseActivator(new SimpleInjectorJobActivator(container));
+                .UseActivator(new SimpleInjectorJobActivator(Container, Lifestyle.Scoped))
+                .UseFilter(new HangfireLogPushFilter(Container.GetInstance<IPusher>()));
 
-            app.UseHangfireDashboard();
-            app.UseHangfireServer();
+            app.UseHangfireServer(new BackgroundJobServerOptions
+            {
+                WorkerCount = 2,
+            });
+
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions());
         }
 
-        private static Dictionary<Type, Type> GetInterfacesWithSingleImplementation(Assembly assembly)
+        private static void ConfigureSignalr(IAppBuilder app)
         {
-            return assembly
-                .GetExportedTypes()
-                .Where(x => x.IsClass
-                            && !x.IsAbstract)
-                .SelectMany(x => x
-                    .GetInterfaces()
-                    .Where(i => i.Assembly == assembly)
-                    .Select(i => new
-                    {
-                        Implementation = x,
-                        Interface = i,
-                    })
-                )
-                .GroupBy(x => x.Interface, (k, g) => new
-                {
-                    Interface = k,
-                    Implemenations = g.Select(y => y.Implementation).ToArray(),
-                })
-                .Where(x => x.Implemenations.Length == 1)
-                .ToDictionary(x => x.Interface, x => x.Implemenations[0]);
+            app.MapSignalR();
         }
     };
 }

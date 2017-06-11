@@ -2,8 +2,29 @@
 @{
 
 }
-<script type="riot/tag" src="/Views/Home/EnqueueActions.tag?@Startup.Version"></script>
-<script type="riot/tag" src="/Views/Home/ListQueueItems.tag?@Startup.Version"></script>
-<script type="riot/tag" src="/Views/Home/Pager.tag?@Startup.Version"></script>
-<ListQueueItems></ListQueueItems>
-@Html.Partial("_Riot")
+@foreach (var tag in _tags)
+{
+    <script type="riot/tag" src="@tag"></script>
+}
+<ListQueueItems />
+<script src="/Content/riot_compiler.min.js"></script>
+<script>
+    riot.compile(function() {
+        riot.mount("*");
+    });
+</script>
+@functions{
+
+    private static readonly string[] _tags = GetTags("~/Views/Home");
+
+    private static string[] GetTags(string path)
+    {
+        var tagDir = System.Web.Hosting.HostingEnvironment.MapPath(path);
+        var absolutePath = VirtualPathUtility.ToAbsolute(path);
+        return Directory
+            .GetFiles(tagDir, "*.tag")
+            .Select(x => $"{absolutePath}/{Path.GetFileName(x)}?{Startup.Version}")
+            .ToArray();
+    }
+
+}

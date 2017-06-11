@@ -12,7 +12,12 @@ namespace RiotHangfireDemo
 
         internal class Handler : IRequestHandler<SendEmail, TaskResult>
         {
-            private static readonly Random _random = new Random();
+            private readonly IRandom _random;
+
+            public Handler(IRandom random)
+            {
+                _random = random;
+            }
 
             public TaskResult Handle(SendEmail cmd)
             {

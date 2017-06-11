@@ -10,61 +10,6 @@ namespace RiotHangfireDemo
 {
     public static class Ext
     {
-        public static bool IsSimpleType(this Type type)
-        {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-
-            if (type.IsGenericType)
-            {
-                type = Nullable.GetUnderlyingType(type);
-                if (type == null) return false;
-            }
-
-            if (type.IsPrimitive)
-                return true;
-
-            if (type == typeof(string))
-                return true;
-
-            if (type == typeof(DateTime))
-                return true;
-
-            if (type == typeof(decimal))
-                return true;
-
-            return false;
-        }
-
-        public static List<PropertyInfo> GetSimpleProperties(this Type type)
-        {
-            return type
-                .GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public)
-                .Where(x => x.PropertyType.IsSimpleType())
-                .ToList();
-        }
-
-        //REF: http://stackoverflow.com/questions/325426/programmatic-equivalent-of-defaulttype
-        public static object GetDefault(this Type type)
-        {
-            if (type != null && type.IsValueType)
-            {
-                return Activator.CreateInstance(type);
-            }
-            return null;
-        }
-
-        public static bool Is<T>(this T obj1, T obj2)
-        {
-            if (obj1 == null && obj2 == null)
-                return true;
-
-            if (obj1 == null || obj2 == null)
-                return false;
-
-            return obj1.Equals(obj2);
-        }
-
         public static object Execute(this IMediator mediator, object request)
         {
             if (request == null)
@@ -102,6 +47,30 @@ namespace RiotHangfireDemo
             {
                 return reader.ReadToEnd();
             }
+        }
+
+        public static Dictionary<Type, Type> GetInterfacesWithSingleImplementation(this Assembly assembly)
+        {
+            return assembly
+                .GetExportedTypes()
+                .Where(x => x.IsClass
+                            && !x.IsAbstract)
+                .SelectMany(x => x
+                    .GetInterfaces()
+                    .Where(i => i.Assembly == assembly)
+                    .Select(i => new
+                    {
+                        Implementation = x,
+                        Interface = i,
+                    })
+                )
+                .GroupBy(x => x.Interface, (k, g) => new
+                {
+                    Interface = k,
+                    Implemenations = g.Select(y => y.Implementation).ToArray(),
+                })
+                .Where(x => x.Implemenations.Length == 1)
+                .ToDictionary(x => x.Interface, x => x.Implemenations[0]);
         }
     };
 }

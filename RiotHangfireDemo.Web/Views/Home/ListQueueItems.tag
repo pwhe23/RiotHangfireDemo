@@ -1,6 +1,12 @@
 ﻿<ListQueueItems>
-    <EnqueueActions></EnqueueActions>
-    <table class="table table-hover">
+    <div if={ result.Items.length == 0 && !result.PageNumber } class="lead">
+        <i class="fa fa-spinner fa-pulse fa-fw"></i> Loading
+    </div>
+    <div>
+        <ActionButton action="EnqueueEmail" text="Enqueue Email" />
+        <ActionButton action="EnqueueReport" text="Enqueue Report" />
+    </div>
+    <table if={ result.Items.length > 0 } class="table table-hover">
         <thead>
             <tr>
                 <th>Id</th>
@@ -20,18 +26,18 @@
                 <td>{ item.Started }</td>
                 <td>{ item.Completed }</td>
                 <td>
-                    <span class="label label-warning" if={ item.Status == "Queued" }>{ item.Status }</span>
-                    <span class="label label-info" if={ item.Status == "Running" }>{ item.Status }</span>
-                    <span class="label label-danger" if={ item.Status == "Error" }>{ item.Status }</span>
-                    <span class="label label-success" if={ item.Status == "Completed" }>{ item.Status }</span>
+                    <span class="label label-warning" if="{ item.Status == 'Queued' }">{ item.Status }</span>
+                    <span class="label label-info" if="{ item.Status == 'Running' }">{ item.Status } <i class="fa fa-spinner fa-pulse fa-fw"></i></span>
+                    <span class="label label-danger" if="{ item.Status == 'Error' }">{ item.Status }</span>
+                    <span class="label label-success" if="{ item.Status == 'Completed' }">{ item.Status }</span>
                 </td>
                 <td>
-                    <pre if={ !!item.Log }>{ item.Log }</pre>
+                    <p class="{ small:true, bg-danger:item.Status == 'Error', bg-success:item.Status == 'Completed' }" if={ !!item.Log }>{ item.Log }</p>
                 </td>
             </tr>
         </tbody>
     </table>
-    <Pager page-number={ result.PageNumber } page-size={ result.PageSize } total-items={ result.TotalItems }></Pager>
+    <Pager page-number={ result.PageNumber } page-size={ result.PageSize } total-items={ result.TotalItems } />
     <script>
         var vm = this;
         vm.queryQueueItems = { PageNumber:1, PageSize:20 };
@@ -47,9 +53,7 @@
         vm.on("mount", function () {
             var pushHub = $.connection.pushHub;
             pushHub.client.push = function (type, data) {
-                switch (type) {
-                    case "Refresh": load(); break;
-                }
+                vm.trigger(type, data);
             };
             $.connection.hub.start();
         });
@@ -65,4 +69,7 @@
 
         load();
     </script>
+    <style>
+        p { padding:.5em; }
+    </style>
 </ListQueueItems>

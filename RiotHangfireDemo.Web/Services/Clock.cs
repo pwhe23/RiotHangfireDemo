@@ -2,12 +2,12 @@
 
 namespace RiotHangfireDemo
 {
-    public interface ITime
+    public interface IClock
     {
         DateTime Now();
     };
 
-    public class Time : ITime
+    public class Clock : IClock
     {
         public DateTime Now() => DateTime.Now;
     };

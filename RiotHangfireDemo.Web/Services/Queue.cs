@@ -9,22 +9,19 @@ namespace RiotHangfireDemo
     public interface IQueue
     {
         void Enqueue(ITask task);
-        void Execute(QueueItem queueItem);
     };
 
     public class Queue : IQueue
     {
         private readonly IDb _db;
         private readonly IMediator _mediator;
-        private readonly IPusher _pusher;
-        private readonly ITime _time;
+        private readonly IClock _clock;
 
-        public Queue(IDb db, IMediator mediator, IPusher pusher, ITime time)
+        public Queue(IDb db, IMediator mediator, IClock clock)
         {
             _db = db;
             _mediator = mediator;
-            _pusher = pusher;
-            _time = time;
+            _clock = clock;
         }
 
         public void Enqueue(ITask task)
@@ -36,7 +33,7 @@ namespace RiotHangfireDemo
             {
                 Name = task.Name,
                 Status = QueueItem.QUEUED,
-                Created = _time.Now(),
+                Created = _clock.Now(),
                 Type = task.GetType().FullName,
                 Data = JsonConvert.SerializeObject(task),
             };
@@ -44,51 +41,38 @@ namespace RiotHangfireDemo
             _db.Add(queuedTask);
             _db.SaveChanges();
 
-            BackgroundJob.Enqueue(() => ExecuteQueueItem(queuedTask.Id));
+            BackgroundJob.Enqueue(() => Execute(queuedTask.Id));
         }
 
         //REF: http://docs.hangfire.io/en/latest/best-practices.html#make-job-arguments-small-and-simple
-        public static void ExecuteQueueItem(int queueItemId)
+        public void Execute(int queueItemId)
         {
-            using (Ioc.BeginScope())
-            {
-                var db = Ioc.Get<IDb>();
-                var queue = Ioc.Get<IQueue>();
+            var queueItem = _db
+                .Query<QueueItem>()
+                .Single(x => x.Id == queueItemId);
 
-                var task = db
-                    .Query<QueueItem>()
-                    .Single(x => x.Id == queueItemId);
-
-                queue.Execute(task);
-            }
-        }
-
-        public void Execute(QueueItem queueItem)
-        {
             queueItem.Status = QueueItem.RUNNING;
-            queueItem.Started = _time.Now();
+            queueItem.Started = _clock.Now();
             _db.SaveChanges();
 
             try
             {
                 var commandType = Type.GetType(queueItem.Type, true, false);
-                var task = (ITask)JsonConvert.DeserializeObject(queueItem.Data, commandType);
-                var result = (TaskResult)_mediator.Execute(task);
+                var cmd = (ITask)JsonConvert.DeserializeObject(queueItem.Data, commandType);
+                var result = (TaskResult)_mediator.Execute(cmd);
 
                 queueItem.Status = QueueItem.COMPLETED;
-                queueItem.Completed = _time.Now();
+                queueItem.Completed = _clock.Now();
                 queueItem.Log = result.Log;
             }
             catch (Exception ex)
             {
                 queueItem.Status = QueueItem.ERROR;
-                queueItem.Completed = _time.Now();
-                queueItem.Log = ex.ToString();
+                queueItem.Completed = _clock.Now();
+                queueItem.Log = ex.Message;
             }
 
             _db.SaveChanges();
-
-            _pusher.Push("Refresh");
         }
     };
 }
