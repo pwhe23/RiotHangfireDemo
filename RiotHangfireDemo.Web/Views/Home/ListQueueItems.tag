@@ -22,9 +22,13 @@
             <tr each={ item, index in result.Items }>
                 <td>{ item.Id }</td>
                 <td>{ item.Name }</td>
-                <td>{ item.Created }</td>
-                <td>{ item.Started }</td>
-                <td>{ item.Completed }</td>
+                <td>{ moment(item.Created).fromNow(); }</td>
+                <td>
+                    <span if={ !!item.Started }>{ moment(item.Started).fromNow(); }</span>
+                </td>
+                <td>
+                    <span if={ !!item.Completed }>{ moment(item.Completed).diff(moment(item.Started), 'seconds') } sec(s)</span>
+                </td>
                 <td>
                     <span class="label label-warning" if="{ item.Status == 'Queued' }">{ item.Status }</span>
                     <span class="label label-info" if="{ item.Status == 'Running' }">{ item.Status } <i class="fa fa-spinner fa-pulse fa-fw"></i></span>
