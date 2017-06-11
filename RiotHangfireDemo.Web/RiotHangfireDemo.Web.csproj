@@ -160,6 +160,7 @@
     <Compile Include="Commands\QueryQueueItems.cs" />
     <Compile Include="Controllers\PushHub.cs" />
     <Compile Include="Controllers\JsonRpcController.cs" />
+    <Compile Include="Services\Commander.cs" />
     <Compile Include="Services\Pusher.cs" />
     <Compile Include="Services\Clock.cs" />
     <Compile Include="Commands\GenerateReportTask.cs" />

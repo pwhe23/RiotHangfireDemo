@@ -3,36 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.ExceptionServices;
-using MediatR;
 
 namespace RiotHangfireDemo
 {
     public static class Ext
     {
-        public static object Execute(this IMediator mediator, object request)
-        {
-            if (request == null)
-                return null;
-
-            try
-            {
-                var requestInterface = request.GetType().GetInterface("IRequest`1");
-                var send = mediator.GetType().GetMethod("Send").MakeGenericMethod(requestInterface.GetGenericArguments());
-                return send.Invoke(mediator, new[] { request });
-            }
-            catch (TargetInvocationException ex)
-            {
-                ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException($"ERROR on request type {request.GetType()}", ex);
-            }
-
-            return null;
-        }
-
         public static string ReadToEnd(this Stream stream)
         {
             if (stream == null)
@@ -47,6 +22,11 @@ namespace RiotHangfireDemo
             {
                 return reader.ReadToEnd();
             }
+        }
+
+        public static bool HasInterface<T>(this Type cls)
+        {
+            return typeof(T).IsAssignableFrom(cls);
         }
 
         public static Dictionary<Type, Type> GetInterfacesWithSingleImplementation(this Assembly assembly)

@@ -21,10 +21,10 @@ namespace RiotHangfireDemo
 
             public TaskResult Handle(GenerateReportTask cmd)
             {
-                var timeout = TimeSpan.FromSeconds(_randomizer.Next(1, 30));
+                var timeout = _randomizer.GetRandomTimeout();
                 Thread.Sleep(timeout);
 
-                if (_randomizer.Next(1, 7) == 4)
+                if (_randomizer.IsRandomError())
                     throw new Exception($"ERROR generating report for {cmd.User}");
 
                 return new TaskResult

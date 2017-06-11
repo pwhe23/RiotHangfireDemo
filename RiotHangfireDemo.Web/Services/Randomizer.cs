@@ -4,16 +4,22 @@ namespace RiotHangfireDemo
 {
     public interface IRandomizer
     {
-        int Next(int min, int max);
+        TimeSpan GetRandomTimeout();
+        bool IsRandomError();
     };
 
     public class Randomizer : IRandomizer
     {
         private static readonly Random _random = new Random();
 
-        public int Next(int min, int max)
+        public TimeSpan GetRandomTimeout()
         {
-            return _random.Next(min, max);
+            return TimeSpan.FromSeconds(_random.Next(1, 30));
+        }
+
+        public bool IsRandomError()
+        {
+            return _random.Next(1, 10) == 5;
         }
     };
 }

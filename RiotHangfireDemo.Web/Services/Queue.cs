@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace RiotHangfireDemo
 {
-    public interface ITask : IRequest<TaskResult>
+    public interface ITask : IRequest<TaskResult>, ICommand
     {
         string Name { get; }
     };
@@ -24,13 +24,13 @@ namespace RiotHangfireDemo
     public class Queue : IQueue
     {
         private readonly IDb _db;
-        private readonly IMediator _mediator;
+        private readonly ICommander _commander;
         private readonly IClock _clock;
 
-        public Queue(IDb db, IMediator mediator, IClock clock)
+        public Queue(IDb db, ICommander commander, IClock clock)
         {
             _db = db;
-            _mediator = mediator;
+            _commander = commander;
             _clock = clock;
         }
 
@@ -44,7 +44,7 @@ namespace RiotHangfireDemo
                 Name = task.Name,
                 Status = QueueItem.QUEUED,
                 Created = _clock.Now(),
-                Type = task.GetType().FullName,
+                Type = task.GetType().Name,
                 Data = JsonConvert.SerializeObject(task),
             };
 
@@ -67,9 +67,7 @@ namespace RiotHangfireDemo
 
             try
             {
-                var commandType = Type.GetType(queueItem.Type, true, false);
-                var cmd = (ITask)JsonConvert.DeserializeObject(queueItem.Data, commandType);
-                var result = (TaskResult)_mediator.Execute(cmd);
+                var result = (TaskResult)_commander.Execute(queueItem.Type, queueItem.Data);
 
                 queueItem.Status = QueueItem.COMPLETED;
                 queueItem.Completed = _clock.Now();

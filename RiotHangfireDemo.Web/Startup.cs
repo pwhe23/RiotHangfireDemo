@@ -31,6 +31,8 @@ namespace RiotHangfireDemo
             ConfigureSignalr(app);
 
             Container.Verify();
+
+            Commander.Initialize(typeof(Startup).Assembly);
         }
 
         private static void ConfigureSimpleInjector()

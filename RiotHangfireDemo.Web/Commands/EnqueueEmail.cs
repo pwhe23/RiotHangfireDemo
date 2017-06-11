@@ -2,7 +2,7 @@
 
 namespace RiotHangfireDemo
 {
-    public class EnqueueEmail : IRequest<Unit>
+    public class EnqueueEmail : IRequest<Unit>, ICommand
     {
         internal class Handler : IRequestHandler<EnqueueEmail, Unit>
         {
