@@ -11,15 +11,21 @@ namespace RiotHangfireDemo
     public class Randomizer : IRandomizer
     {
         private static readonly Random _random = new Random();
+        private readonly DemoConfig _config;
+
+        public Randomizer(DemoConfig config)
+        {
+            _config = config;
+        }
 
         public TimeSpan GetRandomTimeout()
         {
-            return TimeSpan.FromSeconds(_random.Next(1, 30));
+            return TimeSpan.FromSeconds(_random.Next(1, _config.RandomizerTimeoutMax));
         }
 
         public bool IsRandomError()
         {
-            return _random.Next(1, 10) == 5;
+            return _random.Next(1, _config.RandomizerErrorMax) == 5;
         }
     };
 }

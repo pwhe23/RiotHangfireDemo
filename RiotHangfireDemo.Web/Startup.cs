@@ -19,11 +19,12 @@ namespace RiotHangfireDemo
     public class Startup
     {
         private static readonly Container Container = new Container();
-        public static string Version { get; } = Guid.NewGuid().ToString("N");
+        public static string Version { get; } = Guid.NewGuid().ToString("N"); //browser cachebuster
 
         public void Configuration(IAppBuilder app)
         {
             ConfigureSimpleInjector();
+            ConfigureSettings();
             ConfigureMediator();
             CongigureEntityFramework();
             ConfigureMvc(RouteTable.Routes);
@@ -49,6 +50,13 @@ namespace RiotHangfireDemo
             }
 
             Container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
+        }
+
+        private static void ConfigureSettings()
+        {
+            // Put strongly-typed configuration classes in the container for injection
+            var config = Ext.MapAppSettingsToClass<DemoConfig>();
+            Container.RegisterSingleton(config);
         }
 
         private static void ConfigureMediator()
@@ -83,9 +91,11 @@ namespace RiotHangfireDemo
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(Container));
         }
 
-        //REF: http://docs.hangfire.io/en/latest/quick-start.html
         private static void ConfigureHangfire(IAppBuilder app)
         {
+            var config = Container.GetInstance<DemoConfig>();
+
+            //REF: http://docs.hangfire.io/en/latest/quick-start.html
             GlobalConfiguration.Configuration
                 .UseSqlServerStorage(nameof(DemoDb))
                 .UseActivator(new SimpleInjectorJobActivator(Container, Lifestyle.Scoped))
@@ -93,7 +103,7 @@ namespace RiotHangfireDemo
 
             app.UseHangfireServer(new BackgroundJobServerOptions
             {
-                WorkerCount = 2,
+                WorkerCount = config.HangfireWorkerCount,
             });
 
             app.UseHangfireDashboard("/hangfire", new DashboardOptions());

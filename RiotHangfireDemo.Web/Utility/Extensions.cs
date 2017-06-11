@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -51,6 +52,31 @@ namespace RiotHangfireDemo
                 })
                 .Where(x => x.Implemenations.Length == 1)
                 .ToDictionary(x => x.Interface, x => x.Implemenations[0]);
+        }
+
+        public static T MapAppSettingsToClass<T>() where T : new()
+        {
+            var config = new T();
+            var prefix = config.GetType().Name + ".";
+            var properties = config.GetType().GetProperties().ToDictionary(x => x.Name);
+
+            foreach (string appSettingKey in ConfigurationManager.AppSettings)
+            {
+                if (!appSettingKey.StartsWith(prefix))
+                    continue;
+
+                var propertyName = appSettingKey.Substring(prefix.Length);
+                if (!properties.ContainsKey(propertyName))
+                    continue;
+
+                var property = properties[propertyName];
+                var appSettingValue = ConfigurationManager.AppSettings[appSettingKey];
+                var propertyValue = Convert.ChangeType(appSettingValue, property.PropertyType);
+
+                property.SetValue(config, propertyValue);
+            }
+
+            return config;
         }
     };
 }
