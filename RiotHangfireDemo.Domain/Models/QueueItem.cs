@@ -8,7 +8,7 @@ namespace RiotHangfireDemo.Domain
     internal class QueueItem
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; private set; }
+        public int Id { get; set; }
 
         [StringLength(100), Required]
         public string Name { get; set; }
