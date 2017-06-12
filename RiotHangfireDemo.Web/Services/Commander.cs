@@ -5,20 +5,10 @@ using System.Reflection;
 using System.Runtime.ExceptionServices;
 using MediatR;
 using Newtonsoft.Json;
+using RiotHangfireDemo.Domain;
 
-namespace RiotHangfireDemo
+namespace RiotHangfireDemo.Web
 {
-    public interface ICommand
-    {
-        // Placeholder interface to find commands
-    };
-
-    public interface ICommander
-    {
-        object Execute(string commandName, string commandJson);
-        object Execute(object cmd);
-    };
-
     public class Commander : ICommander
     {
         private static Dictionary<string, Type> _commands;

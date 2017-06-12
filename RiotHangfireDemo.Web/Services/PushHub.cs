@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNet.SignalR;
 
-namespace RiotHangfireDemo
+namespace RiotHangfireDemo.Web
 {
     public class PushHub : Hub
     {

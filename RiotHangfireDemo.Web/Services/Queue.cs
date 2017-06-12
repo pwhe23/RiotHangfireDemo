@@ -1,26 +1,11 @@
 ﻿using System;
 using System.Linq;
 using Hangfire;
-using MediatR;
 using Newtonsoft.Json;
+using RiotHangfireDemo.Domain;
 
-namespace RiotHangfireDemo
+namespace RiotHangfireDemo.Web
 {
-    public interface ITask : IRequest<TaskResult>, ICommand
-    {
-        string Name { get; }
-    };
-
-    public class TaskResult
-    {
-        public string Log { get; set; }
-    };
-
-    public interface IQueue
-    {
-        void Enqueue(ITask task);
-    };
-
     public class Queue : IQueue
     {
         private readonly IDb _db;

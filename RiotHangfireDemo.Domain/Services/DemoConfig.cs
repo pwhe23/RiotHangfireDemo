@@ -1,4 +1,4 @@
-﻿namespace RiotHangfireDemo
+﻿namespace RiotHangfireDemo.Domain
 {
     /// <summary>
     /// Strongly-typed configuration class which can be injected into services.

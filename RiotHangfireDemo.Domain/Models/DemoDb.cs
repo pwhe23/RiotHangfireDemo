@@ -1,16 +1,9 @@
 ﻿using System.Data.Entity;
 using System.Linq;
 
-namespace RiotHangfireDemo
+namespace RiotHangfireDemo.Domain
 {
-    public interface IDb
-    {
-        T Add<T>(T entity) where T : class;
-        IQueryable<T> Query<T>() where T : class;
-        int SaveChanges();
-    };
-
-    public class DemoDb : DbContext, IDb
+    internal class DemoDb : DbContext, IDb
     {
         public DemoDb()
         {
@@ -18,6 +11,11 @@ namespace RiotHangfireDemo
         }
 
         public DbSet<QueueItem> QueueItems { get; set; }
+
+        public bool CreateDatabase()
+        {
+            return Database.CreateIfNotExists();
+        }
 
         public virtual T Add<T>(T entity) where T : class
         {

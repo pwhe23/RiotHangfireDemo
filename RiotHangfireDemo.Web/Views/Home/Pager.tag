@@ -1,4 +1,7 @@
 ﻿<Pager>
+    <div if={ !pageNumber }>
+        <div class="alert alert-warning" role="alert">No items found</div>
+    </div>
     <nav aria-label="Page navigation" if={ !!pageNumber }>
         <ul class="pagination">
             <li if={ hasPrevious }>
@@ -39,6 +42,7 @@
             vm.pageSize = Number(vm.opts.pageSize || "10");
             vm.totalItems = Number(vm.opts.totalItems || "0");
 
+            if (vm.totalItems == 0) vm.pageNumber = 0;
             if (vm.pageSize < 1) vm.pageSize = 1;
             vm.totalPages = Math.ceil(vm.totalItems / vm.pageSize);
 
@@ -55,6 +59,7 @@
         };
     </script>
     <style>
+        div.alert { margin:1em 0; }
         span.button { cursor:pointer; }
     </style>
 </Pager>

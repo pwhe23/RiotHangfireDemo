@@ -7,18 +7,26 @@ using Hangfire;
 using MediatR;
 using Microsoft.Owin;
 using Owin;
+using RiotHangfireDemo.Domain;
+using RiotHangfireDemo.Web;
 using SimpleInjector;
 using SimpleInjector.Integration.Web;
 using SimpleInjector.Integration.Web.Mvc;
 using SimpleInjector.Lifestyles;
 
-[assembly: OwinStartup(typeof(RiotHangfireDemo.Startup))]
+[assembly: OwinStartup(typeof(Startup))]
 
-namespace RiotHangfireDemo
+namespace RiotHangfireDemo.Web
 {
     public class Startup
     {
         private static readonly Container Container = new Container();
+        private static readonly Assembly[] AppAssemblies =
+        {
+            typeof(Startup).Assembly,
+            typeof(DemoConfig).Assembly,
+        };
+
         public static string Version { get; } = Guid.NewGuid().ToString("N"); //browser cachebuster
 
         public void Configuration(IAppBuilder app)
@@ -33,7 +41,7 @@ namespace RiotHangfireDemo
 
             Container.Verify();
 
-            Commander.Initialize(typeof(Startup).Assembly);
+            Commander.Initialize(AppAssemblies);
         }
 
         private static void ConfigureSimpleInjector()
@@ -43,11 +51,13 @@ namespace RiotHangfireDemo
                 new WebRequestLifestyle()
             );
 
-            var services = typeof(Startup).Assembly.GetInterfacesWithSingleImplementation();
+            var services = Ext.GetInterfacesWithSingleImplementation(AppAssemblies);
             foreach (var service in services)
             {
                 Container.Register(service.Key, service.Value, Lifestyle.Scoped);
             }
+
+            Container.Register<IDb, DemoDb>(Lifestyle.Scoped); //InternalsVisibleTo
 
             Container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
         }
@@ -62,18 +72,15 @@ namespace RiotHangfireDemo
         private static void ConfigureMediator()
         {
             var requestType = typeof(IRequestHandler<,>);
-            var assemblies = new[] { typeof(Startup).Assembly };
 
-            Container.Register(requestType, assemblies);
+            Container.Register(requestType, AppAssemblies);
             Container.RegisterSingleton<IMediator>(() => new Mediator(Container.GetInstance, Container.GetAllInstances));
         }
 
         private static void CongigureEntityFramework()
         {
-            using (var db = new DemoDb())
-            {
-                db.Database.CreateIfNotExists();
-            }
+            var db = Container.GetInstance<IDb>();
+            db.CreateDatabase();
         }
 
         private static void ConfigureMvc(RouteCollection routes)

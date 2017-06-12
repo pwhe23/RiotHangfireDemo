@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace RiotHangfireDemo
+namespace RiotHangfireDemo.Domain
 {
     public interface IPageable
     {

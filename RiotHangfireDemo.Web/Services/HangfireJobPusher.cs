@@ -2,8 +2,9 @@
 using Hangfire.Server;
 using Hangfire.States;
 using Hangfire.Storage;
+using RiotHangfireDemo.Domain;
 
-namespace RiotHangfireDemo
+namespace RiotHangfireDemo.Web
 {
     //REF: http://docs.hangfire.io/en/latest/extensibility/using-job-filters.html
     public class HangfireJobPusher : JobFilterAttribute, IServerFilter, IApplyStateFilter

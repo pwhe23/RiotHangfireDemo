@@ -1,13 +1,8 @@
 ﻿using System;
+using RiotHangfireDemo.Domain;
 
-namespace RiotHangfireDemo
+namespace RiotHangfireDemo.Web
 {
-    public interface IRandomizer
-    {
-        TimeSpan GetRandomTimeout();
-        bool IsRandomError();
-    };
-
     public class Randomizer : IRandomizer
     {
         private static readonly Random _random = new Random();
@@ -25,7 +20,7 @@ namespace RiotHangfireDemo
 
         public bool IsRandomError()
         {
-            return _random.Next(1, _config.RandomizerErrorMax) == 5;
+            return _random.Next(1, _config.RandomizerErrorMax) == _config.RandomizerErrorMax - 1;
         }
     };
 }

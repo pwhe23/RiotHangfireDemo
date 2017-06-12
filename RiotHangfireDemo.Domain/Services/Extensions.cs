@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace RiotHangfireDemo
+namespace RiotHangfireDemo.Domain
 {
     public static class Ext
     {
@@ -30,15 +30,15 @@ namespace RiotHangfireDemo
             return typeof(T).IsAssignableFrom(cls);
         }
 
-        public static Dictionary<Type, Type> GetInterfacesWithSingleImplementation(this Assembly assembly)
+        public static Dictionary<Type, Type> GetInterfacesWithSingleImplementation(params Assembly[] assemblies)
         {
-            return assembly
-                .GetExportedTypes()
+            return assemblies
+                .SelectMany(x => x.GetExportedTypes())
                 .Where(x => x.IsClass
                             && !x.IsAbstract)
                 .SelectMany(x => x
                     .GetInterfaces()
-                    .Where(i => i.Assembly == assembly)
+                    .Where(i => assemblies.Contains(i.Assembly))
                     .Select(i => new
                     {
                         Implementation = x,

@@ -2,10 +2,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RiotHangfireDemo
+namespace RiotHangfireDemo.Domain
 {
     [Table(nameof(QueueItem))]
-    public class QueueItem
+    internal class QueueItem
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; private set; }

@@ -2,15 +2,15 @@
 using System.Threading;
 using MediatR;
 
-namespace RiotHangfireDemo
+namespace RiotHangfireDemo.Domain
 {
-    public class GenerateReportTask : ITask
+    public class SendEmailTask : ITask
     {
-        public string User { get; set; }
-        public string Title { get; set; }
-        public string Name => $"{nameof(GenerateReportTask)}-{User}";
+        public string To { get; set; }
+        public string Subject { get; set; }
+        public string Name => $"{nameof(SendEmailTask)}-{To}";
 
-        internal class Handler : IRequestHandler<GenerateReportTask, TaskResult>
+        internal class Handler : IRequestHandler<SendEmailTask, TaskResult>
         {
             private readonly IRandomizer _randomizer;
 
@@ -19,17 +19,17 @@ namespace RiotHangfireDemo
                 _randomizer = randomizer;
             }
 
-            public TaskResult Handle(GenerateReportTask cmd)
+            public TaskResult Handle(SendEmailTask cmd)
             {
                 var timeout = _randomizer.GetRandomTimeout();
                 Thread.Sleep(timeout);
 
                 if (_randomizer.IsRandomError())
-                    throw new Exception($"ERROR generating report for {cmd.User}");
+                    throw new Exception($"ERROR sending email to {cmd.To}");
 
                 return new TaskResult
                 {
-                    Log = $"Generated report '{cmd.Title}' for {cmd.User}",
+                    Log = $"Sent email '{cmd.Subject}' to {cmd.To}",
                 };
             }
         };

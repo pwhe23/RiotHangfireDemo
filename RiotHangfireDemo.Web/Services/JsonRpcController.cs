@@ -1,8 +1,9 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using Newtonsoft.Json;
+using RiotHangfireDemo.Domain;
 
-namespace RiotHangfireDemo
+namespace RiotHangfireDemo.Web
 {
     public class JsonRpcController : Controller
     {

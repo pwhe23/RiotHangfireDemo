@@ -4,7 +4,7 @@ using SimpleInjector;
 using SimpleInjector.Extensions.ExecutionContextScoping;
 using SimpleInjector.Lifestyles;
 
-namespace RiotHangfireDemo
+namespace RiotHangfireDemo.Web
 {
     //REF: https://github.com/devmondo/HangFire.SimpleInjector/blob/eec5646c321225e76ea1eb06f01a69e60a273a7f/src/HangFire.SimpleInjector/SimpleInjectorJobActivator.cs
     public class SimpleInjectorJobActivator : JobActivator

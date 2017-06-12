@@ -1,10 +1,10 @@
 ﻿using MediatR;
 
-namespace RiotHangfireDemo
+namespace RiotHangfireDemo.Domain
 {
-    public class EnqueueReport : IRequest<Unit>, ICommand
+    public class EnqueueEmail : IRequest<Unit>, ICommand
     {
-        internal class Handler : IRequestHandler<EnqueueReport, Unit>
+        internal class Handler : IRequestHandler<EnqueueEmail, Unit>
         {
             private readonly IQueue _queue;
 
@@ -13,14 +13,14 @@ namespace RiotHangfireDemo
                 _queue = queue;
             }
 
-            public Unit Handle(EnqueueReport cmd)
+            public Unit Handle(EnqueueEmail cmd)
             {
                 var name = Faker.Name.FullName();
 
-                _queue.Enqueue(new GenerateReportTask
+                _queue.Enqueue(new SendEmailTask
                 {
-                    User = Faker.Internet.UserName(name),
-                    Title = Faker.Company.BS(),
+                    To = Faker.Internet.Email(name),
+                    Subject = Faker.Company.BS(),
                 });
 
                 return Unit.Value;

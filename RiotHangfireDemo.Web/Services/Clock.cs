@@ -1,12 +1,8 @@
 ﻿using System;
+using RiotHangfireDemo.Domain;
 
-namespace RiotHangfireDemo
+namespace RiotHangfireDemo.Web
 {
-    public interface IClock
-    {
-        DateTime Now();
-    };
-
     public class Clock : IClock
     {
         public DateTime Now() => DateTime.Now;

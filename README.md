@@ -17,4 +17,4 @@ Demo Asp.net application using Riot.js and Hangfire.io created for a talk at Mod
 * [Simple Injector](https://simpleinjector.org/) is an easy-to-use Dependency Injection (DI) library for .NET 4+ that supports Silverlight, Windows Phone, Windows 8 including Universal apps and Mono. Simple Injector is highly optimized for performance and concurrent use.
 * [ASP.NET MVC](https://www.asp.net/mvc) gives you a powerful, patterns-based way to build dynamic websites that enables a clean separation of concerns and that gives you full control over markup for enjoyable, agile development.
 * [Json.NET](http://www.newtonsoft.com/json) is a popular high-performance JSON framework for .NET that can serialize and deserialize any .NET object.
-* 
+* [BatMap](https://dogusteknoloji.github.io/BatMap/) is an opininated (yet another) mapper, mainly to convert between EF Entities and DTOs.

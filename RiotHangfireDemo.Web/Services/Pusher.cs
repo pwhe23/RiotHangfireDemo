@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNet.SignalR;
+using RiotHangfireDemo.Domain;
 
-namespace RiotHangfireDemo
+namespace RiotHangfireDemo.Web
 {
-    public interface IPusher
-    {
-        void Push(string type, object data = null);
-    };
-
     public class Pusher : IPusher
     {
         //REF: http://docs.hangfire.io/en/latest/background-processing/tracking-progress.html

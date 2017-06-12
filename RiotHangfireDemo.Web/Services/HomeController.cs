@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace RiotHangfireDemo
+namespace RiotHangfireDemo.Web
 {
     public class HomeController : Controller
     {
