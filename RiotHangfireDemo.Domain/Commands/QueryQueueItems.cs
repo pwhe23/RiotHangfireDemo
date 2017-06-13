@@ -5,6 +5,9 @@ using MediatR;
 
 namespace RiotHangfireDemo.Domain
 {
+    /// <summary>
+    /// Query our QueueItems, results are Paged.
+    /// </summary>
     public class QueryQueueItems : IRequest<PagedList<QueryQueueItems.QueueItemInfo>>, ICommand, IPageable
     {
         public string Status { get; set; }

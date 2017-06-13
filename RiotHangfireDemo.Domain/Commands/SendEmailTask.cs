@@ -4,6 +4,10 @@ using MediatR;
 
 namespace RiotHangfireDemo.Domain
 {
+    /// <summary>
+    /// This is a fake task that simulates the sending
+    /// of an email to be run in the background.
+    /// </summary>
     public class SendEmailTask : ITask
     {
         public string To { get; set; }

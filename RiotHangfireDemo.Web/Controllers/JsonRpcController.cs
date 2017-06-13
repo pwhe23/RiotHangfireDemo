@@ -6,8 +6,7 @@ using RiotHangfireDemo.Domain;
 namespace RiotHangfireDemo.Web
 {
     /// <summary>
-    /// For simplification purposes this is not to the JsonRpc spec. It expects
-    /// the command name and json body to be mapped to the command.
+    /// For simplification purposes this is not to the JsonRpc spec.
     /// </summary>
     public class JsonRpcController : Controller
     {
@@ -18,6 +17,11 @@ namespace RiotHangfireDemo.Web
             _commander = commander;
         }
 
+        /// <summary>
+        /// It expects
+        /// The Post expects the command class name and json body which will be bound
+        /// to the command object.
+        /// </summary>
         [HttpPost, Route("jsonrpc/{commandName}")]
         public ActionResult Post(string commandName)
         {
@@ -32,6 +36,11 @@ namespace RiotHangfireDemo.Web
             };
         }
 
+        /// <summary>
+        /// Primarily for testing, we also allow a Get request with the command Name
+        /// and QueryString parameters will be bound to the command.
+        /// ex: /jsonrpc/DeleteQueueItem?Id=23
+        /// </summary>
         [HttpGet, Route("jsonrpc/{commandName}")]
         public ActionResult Get(string commandName)
         {

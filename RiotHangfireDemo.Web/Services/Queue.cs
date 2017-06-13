@@ -43,6 +43,9 @@ namespace RiotHangfireDemo.Web
         }
 
         //REF: http://docs.hangfire.io/en/latest/best-practices.html#make-job-arguments-small-and-simple
+        /// <summary>
+        /// Called on a background thread by Hangfire.
+        /// </summary>
         public void Execute(int queueItemId)
         {
             var queueItem = _db

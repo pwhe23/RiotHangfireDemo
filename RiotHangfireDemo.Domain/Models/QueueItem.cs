@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RiotHangfireDemo.Domain
 {
+    /// <summary>
+    /// Store serialized ITasks to be executed in the background by the Queue service.
+    /// </summary>
     [Table(nameof(QueueItem))]
     internal class QueueItem
     {

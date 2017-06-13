@@ -3,6 +3,9 @@ using MediatR;
 
 namespace RiotHangfireDemo.Domain
 {
+    /// <summary>
+    /// Delete a specific QueueItem from the Queue.
+    /// </summary>
     public class DeleteQueueItem : IRequest<Unit>, ICommand
     {
         public int Id { get; set; }

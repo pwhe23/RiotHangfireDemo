@@ -4,6 +4,10 @@ using MediatR;
 
 namespace RiotHangfireDemo.Domain
 {
+    /// <summary>
+    /// This is a fake task that simulates the generation
+    /// of a slow report to be run in the background.
+    /// </summary>
     public class GenerateReportTask : ITask
     {
         public string User { get; set; }

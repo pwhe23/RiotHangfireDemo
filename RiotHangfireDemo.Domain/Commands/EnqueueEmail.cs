@@ -2,6 +2,9 @@
 
 namespace RiotHangfireDemo.Domain
 {
+    /// <summary>
+    /// Create a random fake email that can be added to the Queue.
+    /// </summary>
     public class EnqueueEmail : IRequest<Unit>, ICommand
     {
         internal class Handler : IRequestHandler<EnqueueEmail, Unit>

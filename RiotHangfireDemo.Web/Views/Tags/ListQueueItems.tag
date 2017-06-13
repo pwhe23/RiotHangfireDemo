@@ -10,14 +10,14 @@
     <table if="{ result.Items.length > 0 }" class="table table-hover small">
         <thead>
             <tr>
-                <th>Id</th>
+                <th class="text-center">Id</th>
                 <th>Name</th>
                 <th>Created</th>
                 <th>Started</th>
-                <th>Completed</th>
-                <th>Status</th>
+                <th class="text-right">Completed</th>
+                <th class="text-center">Status</th>
                 <th>Log</th>
-                <th>Action</th>
+                <th class="text-center">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -28,7 +28,7 @@
                 <td>
                     <span if={ !!item.Started }>{ moment(item.Started).fromNow(); }</span>
                 </td>
-                <td>
+                <td class="text-right">
                     <span if={ !!item.Completed }>{ moment(item.Completed).diff(moment(item.Started), 'seconds') } sec(s)</span>
                 </td>
                 <td class="text-center">
@@ -41,7 +41,7 @@
                     <p if={ !!item.Log } class="{ bg-danger:item.Status == 'Error', bg-success:item.Status == 'Completed' }">{ item.Log }</p>
                 </td>
                 <td class="text-center">
-                    <CommandButton command="DeleteQueueItem" confirm="Are you sure?" cls="btn btn-xs btn-danger" data={ item }>
+                    <CommandButton command="DeleteQueueItem" confirm="Are you sure?" cls="btn btn-xs btn-danger" data={ {Id:item.Id} }>
                         <i class="fa fa-trash"></i>
                     </CommandButton>
                 </td>

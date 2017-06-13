@@ -3,6 +3,11 @@ using System.Linq;
 
 namespace RiotHangfireDemo.Domain
 {
+    /// <summary>
+    /// The DemoDb context is used to communicate with our SQL Server database.
+    /// The only thing we're storing right now are the QueueItems. Hangfire creates
+    /// its own tables in a separate [Hangfire] schema.
+    /// </summary>
     internal class DemoDb : DbContext, IDb
     {
         public DemoDb()

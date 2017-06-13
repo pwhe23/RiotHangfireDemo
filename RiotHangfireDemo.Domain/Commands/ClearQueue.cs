@@ -3,6 +3,10 @@ using MediatR;
 
 namespace RiotHangfireDemo.Domain
 {
+    /// <summary>
+    /// Delete all of the QueueItem records from the Queue. This will not clear
+    /// out the Jobs from Hangfire, they will all just fail.
+    /// </summary>
     public class ClearQueue : IRequest<Unit>, ICommand
     {
         internal class Handler : IRequestHandler<ClearQueue, Unit>

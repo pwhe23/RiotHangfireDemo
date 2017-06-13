@@ -7,6 +7,9 @@ using System.Reflection;
 
 namespace RiotHangfireDemo.Domain
 {
+    /// <summary>
+    /// Extension methods.
+    /// </summary>
     public static class Ext
     {
         public static string ReadToEnd(this Stream stream)
@@ -30,7 +33,7 @@ namespace RiotHangfireDemo.Domain
             return typeof(T).IsAssignableFrom(cls);
         }
 
-        public static Dictionary<Type, Type> GetInterfacesWithSingleImplementation(params Assembly[] assemblies)
+        public static Dictionary<Type, Type> GetInterfacesWithSingleImplementation(this Assembly[] assemblies)
         {
             return assemblies
                 .SelectMany(x => x.GetExportedTypes())

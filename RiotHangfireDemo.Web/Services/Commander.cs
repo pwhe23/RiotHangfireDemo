@@ -10,7 +10,7 @@ using RiotHangfireDemo.Domain;
 namespace RiotHangfireDemo.Web
 {
     /// <summary>
-    /// Allow execution of commands by MediatR using name and json.
+    /// Allow execution of ICommands by MediatR using name and json.
     /// </summary>
     public class Commander : ICommander
     {
@@ -45,7 +45,7 @@ namespace RiotHangfireDemo.Web
 
             if (string.IsNullOrWhiteSpace(commandJson))
             {
-                commandJson = "{}";
+                commandJson = "{}"; // so JsonConvert doesn't crash if passed null
             }
 
             var command = JsonConvert.DeserializeObject(commandJson, commandType);
@@ -55,7 +55,8 @@ namespace RiotHangfireDemo.Web
         }
 
         /// <summary>
-        /// Translate object-typed command to IRequest type so it can be executed by MediatR.
+        /// Translate object-typed command to IRequest type using Reflection so it can be
+        /// executed by MediatR.
         /// </summary>
         public object Execute(object command)
         {
@@ -64,11 +65,18 @@ namespace RiotHangfireDemo.Web
 
             try
             {
-                var requestInterface = command.GetType().GetInterface("IRequest`1");
-                var sendMethod = _mediator.GetType().GetMethod("Send").MakeGenericMethod(requestInterface.GetGenericArguments());
+                var mediator = this;
 
-                var result = sendMethod.Invoke(_mediator, new[] { command });
+                var requestInterface = command
+                    .GetType()
+                    .GetInterface("IRequest`1");
 
+                var executeMethod = mediator
+                    .GetType()
+                    .GetMethod(nameof(Send))
+                    .MakeGenericMethod(requestInterface.GetGenericArguments());
+
+                var result = executeMethod.Invoke(mediator, new[] { command });
                 return result;
             }
             catch (TargetInvocationException ex)
@@ -83,7 +91,11 @@ namespace RiotHangfireDemo.Web
             return null;
         }
 
-        public TResponse Execute<TResponse>(IRequest<TResponse> command)
+        /// <summary>
+        /// Pass-through to MediatR, provided so ICommander can be injected everywhere
+        /// in favor of IMediator.
+        /// </summary>
+        public TResponse Send<TResponse>(IRequest<TResponse> command)
         {
             return _mediator.Send(command);
         }

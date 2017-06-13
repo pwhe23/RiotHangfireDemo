@@ -2,6 +2,9 @@
 
 namespace RiotHangfireDemo.Domain
 {
+    /// <summary>
+    /// Create a random fake report that can be added to the Queue.
+    /// </summary>
     public class EnqueueReport : IRequest<Unit>, ICommand
     {
         internal class Handler : IRequestHandler<EnqueueReport, Unit>

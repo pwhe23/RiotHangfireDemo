@@ -2,12 +2,18 @@
 
 namespace RiotHangfireDemo.Domain
 {
+    /// <summary>
+    /// Interface for Commands whose results can be paged.
+    /// </summary>
     public interface IPageable
     {
         int? PageNumber { get; set; }
         int? PageSize { get; set; }
     };
 
+    /// <summary>
+    /// Result class for commands which can be paged.
+    /// </summary>
     public class PagedList<T>
     {
         public T[] Items { get; set; }
@@ -16,7 +22,10 @@ namespace RiotHangfireDemo.Domain
         public int TotalItems { get; set; }
     };
 
-    public static class PagedList
+    /// <summary>
+    /// PagedList extension methods.
+    /// </summary>
+    public static class PagedListExt
     {
         public static PagedList<T> ToPagedList<T>(this IOrderedQueryable<T> query, IPageable cmd)
         {

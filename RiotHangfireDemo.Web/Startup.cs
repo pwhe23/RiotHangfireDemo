@@ -31,6 +31,7 @@ namespace RiotHangfireDemo.Web
 
         public static string Version { get; } = Guid.NewGuid().ToString("N"); //browser cachebuster
 
+        // Called during OwinStartup phase
         public void Configuration(IAppBuilder app)
         {
             ConfigureSimpleInjector();
@@ -48,19 +49,20 @@ namespace RiotHangfireDemo.Web
 
         private static void ConfigureSimpleInjector()
         {
+            // If there is no HttpContext present, we are running in a Hangfire background job.
             Container.Options.DefaultScopedLifestyle = Lifestyle.CreateHybrid(() => HttpContext.Current == null,
                 new ThreadScopedLifestyle(),
                 new WebRequestLifestyle()
             );
 
             // Automatically register any interface with only a single implementation
-            var services = Ext.GetInterfacesWithSingleImplementation(AppAssemblies);
+            var services = AppAssemblies.GetInterfacesWithSingleImplementation();
             foreach (var service in services)
             {
                 Container.Register(service.Key, service.Value, Lifestyle.Scoped);
             }
 
-            Container.Register<IDb, DemoDb>(Lifestyle.Scoped); //InternalsVisibleTo
+            Container.Register<IDb, DemoDb>(Lifestyle.Scoped); //Domain InternalsVisibleTo
 
             Container.RegisterMvcControllers(AppAssemblies);
         }
@@ -110,10 +112,12 @@ namespace RiotHangfireDemo.Web
             GlobalConfiguration.Configuration
                 .UseSqlServerStorage(nameof(DemoDb))
                 .UseActivator(new SimpleInjectorJobActivator(Container, Lifestyle.Scoped))
-                .UseFilter(new HangfireJobPusher(Container.GetInstance<IPusher>()));
+                .UseFilter(new HangfireJobPusher(Container.GetInstance<IPusher>()))
+                .UseFilter(new AutomaticRetryAttribute { Attempts = 1 });
 
             app.UseHangfireServer(new BackgroundJobServerOptions
             {
+                ServerName = Environment.MachineName,
                 WorkerCount = config.HangfireWorkerCount,
             });
 

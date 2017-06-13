@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace RiotHangfireDemo.Domain
 {
+    /// <summary>
+    /// Abstract the ContextDb to make testing easier
+    /// </summary>
     public interface IDb : IDisposable
     {
         bool CreateDatabase();

@@ -35,7 +35,7 @@ namespace RiotHangfireDemo.Tests
         }
 
         [Fact]
-        public void Test_QueryQueueItems_SingleStatus()
+        public void Test_QueryQueueItems_StatusFilter()
         {
             var db = A.Fake<IDb>();
             A.CallTo(() => db.Query<QueueItem>()).Returns(_queryItems);
