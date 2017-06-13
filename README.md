@@ -367,6 +367,60 @@ Riot tags can also provide custom styles which are injected into the head of the
 
 RiotHangfireDemo.Domain contains the majority of our business logic via the Commands. It also contains the internal EF Model classes and the internal DemoDb database context class. Finally, the Service interfaces are defined here which must be implemented by our application host, the Mvc website.
 
+### QueryQueueItems.cs
+
+QueryQueueItems is an example of a query command that returns a PagedList of QueueItemInfo DTOs. My commands always provide their own response types so that our internal domain objects are never exposed and we have a consistent api surface area. To help with mapping, I use BatMap to ProjectTo our DTOs from the Entity Framework domain models.
+
+```
+public class QueryQueueItems : IRequest<PagedList<QueryQueueItems.QueueItemInfo>>, ICommand, IPageable
+{
+    public string Status { get; set; }
+    public int? PageNumber { get; set; }
+    public int? PageSize { get; set; }
+
+    public class QueueItemInfo
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Status { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime? Started { get; set; }
+        public DateTime? Completed { get; set; }
+        public string Type { get; set; }
+        public string Data { get; set; }
+        public string Log { get; set; }
+    };
+
+    internal class Handler : IRequestHandler<QueryQueueItems, PagedList<QueueItemInfo>>
+    {
+        private readonly IDb _db;
+
+        public Handler(IDb db)
+        {
+            _db = db;
+        }
+
+        public PagedList<QueueItemInfo> Handle(QueryQueueItems cmd)
+        {
+            var queueItems = _db
+                .Query<QueueItem>()
+                .AsQueryable();
+
+            if (cmd.Status != null)
+            {
+                queueItems = queueItems
+                    .Where(x => x.Status == cmd.Status);
+            }
+
+            return queueItems
+                .ProjectTo<QueueItemInfo>(checkIncludes: true)
+                .OrderByDescending(x => x.Id)
+                .ToPagedList(cmd);
+        }
+    };
+};
+```
+
 ### ICommand interface
 
 ICommand is a placeholder interface to find Commands which can be executed by Commander. These may be invoked via a JsonRpcController api request, or triggerd by Hangfire job in the background. Commander maintains a mapping of ICommand name to Types.

@@ -6,7 +6,8 @@ using MediatR;
 namespace RiotHangfireDemo.Domain
 {
     /// <summary>
-    /// Query our QueueItems, results are Paged.
+    /// Query our QueueItems, results are Paged using PagedList. We map the Entity Framework QueueItem model to our
+    /// QueueItemInfo DTO using BapMap ProjectTo.
     /// </summary>
     public class QueryQueueItems : IRequest<PagedList<QueryQueueItems.QueueItemInfo>>, ICommand, IPageable
     {
