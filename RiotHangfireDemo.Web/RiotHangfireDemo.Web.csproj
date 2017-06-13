@@ -181,7 +181,7 @@
     <Content Include="Views\Home\Pager.tag" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\ActionButton.tag" />
+    <Content Include="Views\Home\CommandButton.tag" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\fonts\fontawesome-webfont.eot" />

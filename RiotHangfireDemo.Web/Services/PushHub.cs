@@ -4,9 +4,6 @@ namespace RiotHangfireDemo.Web
 {
     public class PushHub : Hub
     {
-        public void Push(string type, object data = null)
-        {
-            Clients.All.Push(type, data);
-        }
+        // Just a placeholder for the routing, used by Pusher
     };
 }

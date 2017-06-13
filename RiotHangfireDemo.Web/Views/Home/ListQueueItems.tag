@@ -3,10 +3,11 @@
         <i class="fa fa-spinner fa-pulse fa-fw"></i> Loading
     </div>
     <div>
-        <ActionButton action="EnqueueEmail" text="Enqueue Email" />
-        <ActionButton action="EnqueueReport" text="Enqueue Report" />
+        <CommandButton command="EnqueueEmail" text="Enqueue Email" />
+        <CommandButton command="EnqueueReport" text="Enqueue Report" />
+        <CommandButton command="ClearQueue" text="Clear Queue" confirm="Are you sure?" />
     </div>
-    <table if={ result.Items.length > 0 } class="table table-hover small">
+    <table if="{ result.Items.length > 0 }" class="table table-hover small">
         <thead>
             <tr>
                 <th>Id</th>
@@ -16,10 +17,11 @@
                 <th>Completed</th>
                 <th>Status</th>
                 <th>Log</th>
+                <th>&nbsp;</th>
             </tr>
         </thead>
         <tbody>
-            <tr each={ item, index in result.Items }>
+            <tr each={ item in result.Items }>
                 <td>{ item.Id }</td>
                 <td>{ item.Name }</td>
                 <td>{ moment(item.Created).fromNow(); }</td>
@@ -37,6 +39,11 @@
                 </td>
                 <td>
                     <p if={ !!item.Log } class="{ bg-danger:item.Status == 'Error', bg-success:item.Status == 'Completed' }">{ item.Log }</p>
+                </td>
+                <td>
+                    <CommandButton command="DeleteQueueItem" confirm="Are you sure?" cls="btn btn-xs btn-danger" data={ item }>
+                        <i class="fa fa-trash"></i>
+                    </CommandButton>
                 </td>
             </tr>
         </tbody>

@@ -2,6 +2,6 @@
 {
     public interface IPusher
     {
-        void Push(string type, object data = null);
+        void NotifyQueueItemsChanged();
     };
 }

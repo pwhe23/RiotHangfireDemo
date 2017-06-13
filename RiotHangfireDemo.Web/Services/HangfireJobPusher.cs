@@ -18,7 +18,7 @@ namespace RiotHangfireDemo.Web
 
         public void OnPerforming(PerformingContext filterContext)
         {
-            _pusher.Push("QueueItems.Changed");
+            _pusher.NotifyQueueItemsChanged();
         }
 
         public void OnPerformed(PerformedContext filterContext)
@@ -27,7 +27,7 @@ namespace RiotHangfireDemo.Web
 
         public void OnStateApplied(ApplyStateContext context, IWriteOnlyTransaction transaction)
         {
-            _pusher.Push("QueueItems.Changed");
+            _pusher.NotifyQueueItemsChanged();
         }
 
         public void OnStateUnapplied(ApplyStateContext context, IWriteOnlyTransaction transaction)

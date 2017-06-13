@@ -5,8 +5,13 @@ namespace RiotHangfireDemo.Web
 {
     public class Pusher : IPusher
     {
+        public void NotifyQueueItemsChanged()
+        {
+            Push("QueueItems.Changed");
+        }
+
         //REF: http://docs.hangfire.io/en/latest/background-processing/tracking-progress.html
-        public void Push(string type, object data = null)
+        private static void Push(string type, object data = null)
         {
             GlobalHost
                 .ConnectionManager

@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ClearQueue.cs" />
+    <Compile Include="Commands\DeleteQueueItem.cs" />
     <Compile Include="Commands\EnqueueEmail.cs" />
     <Compile Include="Commands\EnqueueReport.cs" />
     <Compile Include="Commands\GenerateReportTask.cs" />

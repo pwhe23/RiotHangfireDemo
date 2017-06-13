@@ -21,6 +21,8 @@ namespace RiotHangfireDemo.Web
     public class Startup
     {
         private static readonly Container Container = new Container();
+
+        // Assemblies which should be scanned at startup
         private static readonly Assembly[] AppAssemblies =
         {
             typeof(Startup).Assembly,
@@ -51,6 +53,7 @@ namespace RiotHangfireDemo.Web
                 new WebRequestLifestyle()
             );
 
+            // Automatically register any interface with only a single implementation
             var services = Ext.GetInterfacesWithSingleImplementation(AppAssemblies);
             foreach (var service in services)
             {
@@ -59,7 +62,7 @@ namespace RiotHangfireDemo.Web
 
             Container.Register<IDb, DemoDb>(Lifestyle.Scoped); //InternalsVisibleTo
 
-            Container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
+            Container.RegisterMvcControllers(AppAssemblies);
         }
 
         private static void ConfigureSettings()
@@ -71,9 +74,10 @@ namespace RiotHangfireDemo.Web
 
         private static void ConfigureMediator()
         {
+            // Register all Command Handlers
             var requestType = typeof(IRequestHandler<,>);
-
             Container.Register(requestType, AppAssemblies);
+
             Container.RegisterSingleton<IMediator>(() => new Mediator(Container.GetInstance, Container.GetAllInstances));
         }
 
