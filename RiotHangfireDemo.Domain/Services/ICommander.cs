@@ -1,13 +1,15 @@
 ﻿namespace RiotHangfireDemo.Domain
 {
+    /// <summary>
+    /// Placeholder interface to find Commands
+    /// </summary>
     public interface ICommand
     {
-        // Placeholder interface to find commands
     };
 
     public interface ICommander
     {
         object Execute(string commandName, string commandJson);
-        object Execute(object cmd);
+        object Execute(object command);
     };
 }

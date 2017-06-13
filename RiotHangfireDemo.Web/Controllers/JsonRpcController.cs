@@ -5,6 +5,10 @@ using RiotHangfireDemo.Domain;
 
 namespace RiotHangfireDemo.Web
 {
+    /// <summary>
+    /// For simplification purposes this is not to the JsonRpc spec. It expects
+    /// the command name and json body to be mapped to the command.
+    /// </summary>
     public class JsonRpcController : Controller
     {
         private readonly ICommander _commander;

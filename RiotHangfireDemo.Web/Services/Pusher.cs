@@ -3,6 +3,9 @@ using RiotHangfireDemo.Domain;
 
 namespace RiotHangfireDemo.Web
 {
+    /// <summary>
+    /// Push notifications to the clients via SignalR
+    /// </summary>
     public class Pusher : IPusher
     {
         public void NotifyQueueItemsChanged()

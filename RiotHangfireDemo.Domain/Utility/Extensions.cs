@@ -54,6 +54,9 @@ namespace RiotHangfireDemo.Domain
                 .ToDictionary(x => x.Interface, x => x.Implemenations[0]);
         }
 
+        /// <summary>
+        /// Translate Web.config AppSettings to a strongly-typed config class.
+        /// </summary>
         public static T MapAppSettingsToClass<T>() where T : new()
         {
             var config = new T();

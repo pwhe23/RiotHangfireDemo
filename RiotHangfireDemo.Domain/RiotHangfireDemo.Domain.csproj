@@ -51,15 +51,15 @@
     <Compile Include="Models\DemoDb.cs" />
     <Compile Include="Models\QueueItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\DemoConfig.cs" />
+    <Compile Include="DemoConfig.cs" />
     <Compile Include="Services\IClock.cs" />
     <Compile Include="Services\ICommander.cs" />
     <Compile Include="Services\IDb.cs" />
     <Compile Include="Services\IPusher.cs" />
     <Compile Include="Services\IQueue.cs" />
     <Compile Include="Services\IRandomizer.cs" />
-    <Compile Include="Services\Extensions.cs" />
-    <Compile Include="Services\PagedList.cs" />
+    <Compile Include="Utility\Extensions.cs" />
+    <Compile Include="Utility\PagedList.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BatMap">

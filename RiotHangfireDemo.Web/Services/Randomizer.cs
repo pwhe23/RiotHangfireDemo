@@ -3,6 +3,9 @@ using RiotHangfireDemo.Domain;
 
 namespace RiotHangfireDemo.Web
 {
+    /// <summary>
+    /// Randomize values for our simulated Task classes.
+    /// </summary>
     public class Randomizer : IRandomizer
     {
         private static readonly Random _random = new Random();

@@ -6,6 +6,9 @@ using RiotHangfireDemo.Domain;
 
 namespace RiotHangfireDemo.Web
 {
+    /// <summary>
+    /// Queue can Enqueue tasks to be executed by Hangfire.
+    /// </summary>
     public class Queue : IQueue
     {
         private readonly IDb _db;

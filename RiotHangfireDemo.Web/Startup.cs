@@ -22,7 +22,7 @@ namespace RiotHangfireDemo.Web
     {
         private static readonly Container Container = new Container();
 
-        // Assemblies which should be scanned at startup
+        // Assemblies which should be scanned for types
         private static readonly Assembly[] AppAssemblies =
         {
             typeof(Startup).Assembly,
@@ -84,7 +84,7 @@ namespace RiotHangfireDemo.Web
         private static void CongigureEntityFramework()
         {
             var db = Container.GetInstance<IDb>();
-            db.CreateDatabase();
+            db.CreateDatabase(); // ignored if exists
         }
 
         private static void ConfigureMvc(RouteCollection routes)

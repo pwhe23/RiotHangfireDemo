@@ -22,12 +22,17 @@ namespace RiotHangfireDemo.Domain
         {
             var list = new PagedList<T>
             {
-                PageNumber = !cmd.PageNumber.HasValue || cmd.PageNumber < 1 ? 1 : cmd.PageNumber.Value,
-                PageSize = !cmd.PageSize.HasValue || cmd.PageSize < 1 || cmd.PageSize > 1000 ? 10 : cmd.PageSize.Value
+                PageNumber = !cmd.PageNumber.HasValue || cmd.PageNumber < 1
+                    ? 1
+                    : cmd.PageNumber.Value,
+                PageSize = !cmd.PageSize.HasValue || cmd.PageSize < 1 || cmd.PageSize > 1000
+                    ? 10
+                    : cmd.PageSize.Value,
             };
 
-
-            var recordsToSkip = list.PageNumber > 1 ? (list.PageNumber - 1) * list.PageSize : 0;
+            var recordsToSkip = list.PageNumber > 1
+                ? (list.PageNumber - 1) * list.PageSize
+                : 0;
 
             var result = query
                 .Skip(recordsToSkip)

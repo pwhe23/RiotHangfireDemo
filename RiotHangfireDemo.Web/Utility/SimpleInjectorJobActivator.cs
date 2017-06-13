@@ -7,6 +7,10 @@ using SimpleInjector.Lifestyles;
 namespace RiotHangfireDemo.Web
 {
     //REF: https://github.com/devmondo/HangFire.SimpleInjector/blob/eec5646c321225e76ea1eb06f01a69e60a273a7f/src/HangFire.SimpleInjector/SimpleInjectorJobActivator.cs
+    /// <summary>
+    /// I couldn't get the HangFire.SimpleInjector Nuget package to work with the new
+    /// ThreadScopedLifestyle so I copied the source here and fixed it.
+    /// </summary>
     public class SimpleInjectorJobActivator : JobActivator
     {
         private readonly Container _container;

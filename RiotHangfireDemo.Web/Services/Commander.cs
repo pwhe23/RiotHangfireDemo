@@ -9,6 +9,9 @@ using RiotHangfireDemo.Domain;
 
 namespace RiotHangfireDemo.Web
 {
+    /// <summary>
+    /// Allow execution of commands by MediatR using name and json.
+    /// </summary>
     public class Commander : ICommander
     {
         private static Dictionary<string, Type> _commands;
@@ -20,9 +23,8 @@ namespace RiotHangfireDemo.Web
         }
 
         /// <summary>
-        /// Find all ICommand classes in provided Assemblies
+        /// Find all ICommand classes in provided Assemblies which can be executed.
         /// </summary>
-        /// <param name="assemblies"></param>
         public static void Initialize(params Assembly[] assemblies)
         {
             _commands = assemblies
@@ -55,17 +57,17 @@ namespace RiotHangfireDemo.Web
         /// <summary>
         /// Translate object-typed command to IRequest type so it can be executed by MediatR.
         /// </summary>
-        public object Execute(object cmd)
+        public object Execute(object command)
         {
-            if (cmd == null)
+            if (command == null)
                 return null;
 
             try
             {
-                var requestInterface = cmd.GetType().GetInterface("IRequest`1");
+                var requestInterface = command.GetType().GetInterface("IRequest`1");
                 var sendMethod = _mediator.GetType().GetMethod("Send").MakeGenericMethod(requestInterface.GetGenericArguments());
 
-                var result = sendMethod.Invoke(_mediator, new[] { cmd });
+                var result = sendMethod.Invoke(_mediator, new[] { command });
 
                 return result;
             }
@@ -75,15 +77,15 @@ namespace RiotHangfireDemo.Web
             }
             catch (Exception ex)
             {
-                throw new ApplicationException($"ERROR on request type {cmd.GetType()}", ex);
+                throw new ApplicationException($"ERROR on request type {command.GetType()}", ex);
             }
 
             return null;
         }
 
-        public TResponse Execute<TResponse>(IRequest<TResponse> cmd)
+        public TResponse Execute<TResponse>(IRequest<TResponse> command)
         {
-            return _mediator.Send(cmd);
+            return _mediator.Send(command);
         }
     };
 }

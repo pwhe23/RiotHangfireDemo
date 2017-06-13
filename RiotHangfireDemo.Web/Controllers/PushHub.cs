@@ -2,8 +2,10 @@
 
 namespace RiotHangfireDemo.Web
 {
+    /// <summary>
+    /// Just a placeholder Hub for the routing, used by Pusher
+    /// </summary>
     public class PushHub : Hub
     {
-        // Just a placeholder for the routing, used by Pusher
     };
 }

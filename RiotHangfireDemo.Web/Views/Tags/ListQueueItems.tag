@@ -1,11 +1,11 @@
 ﻿<ListQueueItems>
-    <div if="{ result.Items.length == 0 && !result.PageNumber }" class="lead">
-        <i class="fa fa-spinner fa-pulse fa-fw"></i> Loading
-    </div>
-    <div>
+    <div class="commandbar">
         <CommandButton command="EnqueueEmail" text="Enqueue Email" />
         <CommandButton command="EnqueueReport" text="Enqueue Report" />
         <CommandButton command="ClearQueue" text="Clear Queue" confirm="Are you sure?" />
+    </div>
+    <div if="{ result.Items.length == 0 && !result.PageNumber }" class="lead">
+        <i class="fa fa-spinner fa-pulse fa-fw"></i> Loading
     </div>
     <table if="{ result.Items.length > 0 }" class="table table-hover small">
         <thead>
@@ -17,12 +17,12 @@
                 <th>Completed</th>
                 <th>Status</th>
                 <th>Log</th>
-                <th>&nbsp;</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
             <tr each={ item in result.Items }>
-                <td>{ item.Id }</td>
+                <td class="text-center">{ item.Id }</td>
                 <td>{ item.Name }</td>
                 <td>{ moment(item.Created).fromNow(); }</td>
                 <td>
@@ -31,7 +31,7 @@
                 <td>
                     <span if={ !!item.Completed }>{ moment(item.Completed).diff(moment(item.Started), 'seconds') } sec(s)</span>
                 </td>
-                <td>
+                <td class="text-center">
                     <span if="{ item.Status == 'Queued' }" class="label label-warning">{ item.Status }</span>
                     <span if="{ item.Status == 'Running' }" class="label label-info">{ item.Status } <i class="fa fa-spinner fa-pulse fa-fw"></i></span>
                     <span if="{ item.Status == 'Error' }" class="label label-danger">{ item.Status }</span>
@@ -40,7 +40,7 @@
                 <td>
                     <p if={ !!item.Log } class="{ bg-danger:item.Status == 'Error', bg-success:item.Status == 'Completed' }">{ item.Log }</p>
                 </td>
-                <td>
+                <td class="text-center">
                     <CommandButton command="DeleteQueueItem" confirm="Are you sure?" cls="btn btn-xs btn-danger" data={ item }>
                         <i class="fa fa-trash"></i>
                     </CommandButton>
@@ -81,6 +81,10 @@
         load();
     </script>
     <style>
+        .lead { margin-top: 14px; }
+        .commandbar { margin: 15px 0; }
+        .commandbar button { margin-right: 25px; }
+        .table { margin:0; }
         table p { padding:.5em; margin:0; }
     </style>
 </ListQueueItems>

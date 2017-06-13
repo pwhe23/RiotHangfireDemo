@@ -18,7 +18,4 @@
             jsonRpc(vm.command, vm.data);
         };
     </script>
-    <style>
-        button { margin-right:25px; }
-    </style>
 </CommandButton>

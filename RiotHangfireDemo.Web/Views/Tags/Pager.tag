@@ -1,5 +1,5 @@
 ﻿<Pager>
-    <div if={ !pageNumber }>
+    <div if={ !totalItems }>
         <div class="alert alert-warning" role="alert">No items found</div>
     </div>
     <nav aria-label="Page navigation" if={ !!pageNumber }>
@@ -36,6 +36,7 @@
     </nav>
     <script>
         var vm = this;
+        vm.totalItems = -1; //hide before loaded
 
         vm.on("update", function () {
             vm.pageNumber = Number(vm.opts.pageNumber || "1");
