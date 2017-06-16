@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using MediatR;
 
 namespace RiotHangfireDemo.Domain
 {
@@ -8,13 +7,13 @@ namespace RiotHangfireDemo.Domain
     /// This is a fake task that simulates the sending
     /// of an email to be run in the background.
     /// </summary>
-    public class SendEmailTask : ITask
+    public class SendEmailTask : BackgroundTask
     {
         public string To { get; set; }
         public string Subject { get; set; }
-        public string Name => $"{nameof(SendEmailTask)}-{To}";
+        public override string Name => $"{base.Name}-{To}";
 
-        internal class Handler : IRequestHandler<SendEmailTask, TaskResult>
+        internal class Handler : CommandHandler<SendEmailTask, TaskResult>
         {
             private readonly IRandomizer _randomizer;
 
@@ -23,7 +22,7 @@ namespace RiotHangfireDemo.Domain
                 _randomizer = randomizer;
             }
 
-            public TaskResult Handle(SendEmailTask cmd)
+            public override TaskResult Handle(SendEmailTask cmd)
             {
                 var timeout = _randomizer.GetRandomTimeout();
                 Thread.Sleep(timeout);

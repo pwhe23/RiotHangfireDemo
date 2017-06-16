@@ -43,5 +43,10 @@ namespace RiotHangfireDemo.Domain
             }
             return entity;
         }
+
+        public int Commit()
+        {
+            return SaveChanges();
+        }
     };
 }

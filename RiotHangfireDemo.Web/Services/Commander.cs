@@ -32,7 +32,8 @@ namespace RiotHangfireDemo.Web
                 .Where(x => x.IsClass
                             && !x.IsAbstract
                             && !x.IsInterface
-                            && !x.IsNested && x.HasInterface<ICommand>())
+                            && !x.IsNested
+                            && x.HasInterface<ICommand>())
                 .ToDictionary(x => x.Name, x => x);
         }
 

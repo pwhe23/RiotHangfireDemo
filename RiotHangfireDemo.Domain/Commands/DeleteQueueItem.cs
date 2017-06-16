@@ -1,16 +1,15 @@
 ﻿using System.Linq;
-using MediatR;
 
 namespace RiotHangfireDemo.Domain
 {
     /// <summary>
     /// Delete a specific QueueItem from the Queue.
     /// </summary>
-    public class DeleteQueueItem : IRequest<Unit>, ICommand
+    public class DeleteQueueItem : Command
     {
         public int Id { get; set; }
 
-        internal class Handler : IRequestHandler<DeleteQueueItem, Unit>
+        internal class Handler : CommandHandler<DeleteQueueItem, CommandResponse>
         {
             private readonly IDb _db;
             private readonly IPusher _pusher;
@@ -21,18 +20,18 @@ namespace RiotHangfireDemo.Domain
                 _pusher = pusher;
             }
 
-            public Unit Handle(DeleteQueueItem cmd)
+            public override CommandResponse Handle(DeleteQueueItem cmd)
             {
                 var queueItem = _db
                     .Query<QueueItem>()
                     .Single(x => x.Id == cmd.Id);
 
                 _db.Delete(queueItem);
-                _db.SaveChanges();
+                _db.Commit();
 
                 _pusher.NotifyQueueItemsChanged();
 
-                return Unit.Value;
+                return CommandResponse.Success();
             }
         }
     };

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using BatMap;
-using MediatR;
 
 namespace RiotHangfireDemo.Domain
 {
@@ -9,11 +8,9 @@ namespace RiotHangfireDemo.Domain
     /// Query our QueueItems, results are Paged using PagedList. We map the Entity Framework QueueItem model to our
     /// QueueItemInfo DTO using BapMap ProjectTo.
     /// </summary>
-    public class QueryQueueItems : IRequest<PagedList<QueryQueueItems.QueueItemInfo>>, ICommand, IPageable
+    public class QueryQueueItems : Query<QueryQueueItems.QueueItemInfo>
     {
         public string Status { get; set; }
-        public int? PageNumber { get; set; }
-        public int? PageSize { get; set; }
 
         public class QueueItemInfo
         {
@@ -28,7 +25,7 @@ namespace RiotHangfireDemo.Domain
             public string Log { get; set; }
         };
 
-        internal class Handler : IRequestHandler<QueryQueueItems, PagedList<QueueItemInfo>>
+        internal class Handler : CommandHandler<QueryQueueItems, PagedList<QueueItemInfo>>
         {
             private readonly IDb _db;
 
@@ -37,7 +34,7 @@ namespace RiotHangfireDemo.Domain
                 _db = db;
             }
 
-            public PagedList<QueueItemInfo> Handle(QueryQueueItems cmd)
+            public override PagedList<QueueItemInfo> Handle(QueryQueueItems cmd)
             {
                 var queueItems = _db
                     .Query<QueueItem>()

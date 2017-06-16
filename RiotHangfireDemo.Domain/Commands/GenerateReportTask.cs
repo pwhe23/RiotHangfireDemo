@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using MediatR;
 
 namespace RiotHangfireDemo.Domain
 {
@@ -8,13 +7,13 @@ namespace RiotHangfireDemo.Domain
     /// This is a fake task that simulates the generation
     /// of a slow report to be run in the background.
     /// </summary>
-    public class GenerateReportTask : ITask
+    public class GenerateReportTask : BackgroundTask
     {
         public string User { get; set; }
         public string Title { get; set; }
-        public string Name => $"{nameof(GenerateReportTask)}-{User}";
+        public override string Name => $"{base.Name}-{User}";
 
-        internal class Handler : IRequestHandler<GenerateReportTask, TaskResult>
+        internal class Handler : CommandHandler<GenerateReportTask, TaskResult>
         {
             private readonly IRandomizer _randomizer;
 
@@ -23,7 +22,7 @@ namespace RiotHangfireDemo.Domain
                 _randomizer = randomizer;
             }
 
-            public TaskResult Handle(GenerateReportTask cmd)
+            public override TaskResult Handle(GenerateReportTask cmd)
             {
                 var timeout = _randomizer.GetRandomTimeout();
                 Thread.Sleep(timeout);

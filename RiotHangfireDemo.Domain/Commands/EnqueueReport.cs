@@ -1,13 +1,11 @@
-﻿using MediatR;
-
-namespace RiotHangfireDemo.Domain
+﻿namespace RiotHangfireDemo.Domain
 {
     /// <summary>
     /// Create a random fake report that can be added to the Queue.
     /// </summary>
-    public class EnqueueReport : IRequest<Unit>, ICommand
+    public class EnqueueReport : Command
     {
-        internal class Handler : IRequestHandler<EnqueueReport, Unit>
+        internal class Handler : CommandHandler<EnqueueReport, CommandResponse>
         {
             private readonly IQueue _queue;
 
@@ -16,7 +14,7 @@ namespace RiotHangfireDemo.Domain
                 _queue = queue;
             }
 
-            public Unit Handle(EnqueueReport cmd)
+            public override CommandResponse Handle(EnqueueReport cmd)
             {
                 var name = Faker.Name.FullName();
 
@@ -26,7 +24,7 @@ namespace RiotHangfireDemo.Domain
                     Title = Faker.Company.BS(),
                 });
 
-                return Unit.Value;
+                return CommandResponse.Success();
             }
         };
     };

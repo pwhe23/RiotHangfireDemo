@@ -22,7 +22,7 @@ namespace RiotHangfireDemo.Web
             _clock = clock;
         }
 
-        public void Enqueue(ITask task)
+        public void Enqueue(BackgroundTask task)
         {
             if (task == null)
                 return;
@@ -37,7 +37,7 @@ namespace RiotHangfireDemo.Web
             };
 
             _db.Add(queuedTask);
-            _db.SaveChanges();
+            _db.Commit();
 
             BackgroundJob.Enqueue(() => Execute(queuedTask.Id));
         }
@@ -54,7 +54,7 @@ namespace RiotHangfireDemo.Web
 
             queueItem.Status = QueueItem.RUNNING;
             queueItem.Started = _clock.Now();
-            _db.SaveChanges();
+            _db.Commit();
 
             try
             {
@@ -71,7 +71,7 @@ namespace RiotHangfireDemo.Web
                 queueItem.Log = ex.Message;
             }
 
-            _db.SaveChanges();
+            _db.Commit();
         }
     };
 }

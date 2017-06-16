@@ -1,13 +1,11 @@
-﻿using MediatR;
-
-namespace RiotHangfireDemo.Domain
+﻿namespace RiotHangfireDemo.Domain
 {
     /// <summary>
     /// Create a random fake email that can be added to the Queue.
     /// </summary>
-    public class EnqueueEmail : IRequest<Unit>, ICommand
+    public class EnqueueEmail : Command
     {
-        internal class Handler : IRequestHandler<EnqueueEmail, Unit>
+        internal class Handler : CommandHandler<EnqueueEmail, CommandResponse>
         {
             private readonly IQueue _queue;
 
@@ -16,7 +14,7 @@ namespace RiotHangfireDemo.Domain
                 _queue = queue;
             }
 
-            public Unit Handle(EnqueueEmail cmd)
+            public override CommandResponse Handle(EnqueueEmail cmd)
             {
                 var name = Faker.Name.FullName();
 
@@ -26,7 +24,7 @@ namespace RiotHangfireDemo.Domain
                     Subject = Faker.Company.BS(),
                 });
 
-                return Unit.Value;
+                return CommandResponse.Success();
             }
         };
     };

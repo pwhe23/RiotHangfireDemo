@@ -6,9 +6,9 @@ namespace RiotHangfireDemo.Domain
     /// Background tasks which are serialized into QueueItems to be
     /// executed.
     /// </summary>
-    public interface ITask : IRequest<TaskResult>, ICommand
+    public abstract class BackgroundTask : IRequest<TaskResult>, ICommand
     {
-        string Name { get; }
+        public virtual string Name => GetType().Name;
     };
 
     /// <summary>
@@ -25,6 +25,6 @@ namespace RiotHangfireDemo.Domain
     /// </summary>
     public interface IQueue
     {
-        void Enqueue(ITask task);
+        void Enqueue(BackgroundTask task);
     };
 }
