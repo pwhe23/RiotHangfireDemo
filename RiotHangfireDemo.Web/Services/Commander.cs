@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
-using MediatR;
 using Newtonsoft.Json;
 using RiotHangfireDemo.Domain;
 
@@ -15,11 +14,11 @@ namespace RiotHangfireDemo.Web
     public class Commander : ICommander
     {
         private static Dictionary<string, Type> _commands;
-        private readonly IMediator _mediator;
+        private readonly Dispatcher _dispatcher;
 
-        public Commander(IMediator mediator)
+        public Commander(Dispatcher dispatcher)
         {
-            _mediator = mediator;
+            _dispatcher = dispatcher;
         }
 
         /// <summary>
@@ -98,7 +97,7 @@ namespace RiotHangfireDemo.Web
         /// </summary>
         public TResponse Send<TResponse>(IRequest<TResponse> command)
         {
-            return _mediator.Send(command);
+            return _dispatcher.Send(command);
         }
     };
 }

@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace RiotHangfireDemo.Domain
+﻿namespace RiotHangfireDemo.Domain
 {
     /// <summary>
     /// Background tasks which are serialized into QueueItems to be

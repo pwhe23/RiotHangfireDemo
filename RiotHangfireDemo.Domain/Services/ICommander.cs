@@ -1,5 +1,4 @@
-﻿using MediatR;
-namespace RiotHangfireDemo.Domain
+﻿namespace RiotHangfireDemo.Domain
 {
     /// <summary>
     /// Marker interface to be able to find all commands and queries
@@ -7,6 +6,16 @@ namespace RiotHangfireDemo.Domain
     public interface ICommand
     {
     };
+
+    public interface IRequest<TResponse>
+    {
+    };
+
+    public interface IRequestHandler<in TRequest, out TResponse> where TRequest : IRequest<TResponse>
+    {
+        TResponse Handle(TRequest cmd);
+    };
+
     /// <summary>
     /// Placeholder interface to find Commands
     /// </summary>
@@ -20,10 +29,6 @@ namespace RiotHangfireDemo.Domain
         {
             return new CommandResponse();
         }
-    };
-
-    public class CommandResponse<T>
-    {
     };
 
     public abstract class Query<T> : IRequest<PagedList<T>>, ICommand, IPageable

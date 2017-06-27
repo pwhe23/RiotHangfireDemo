@@ -4,7 +4,6 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Hangfire;
-using MediatR;
 using Microsoft.Owin;
 using Owin;
 using RiotHangfireDemo.Domain;
@@ -36,7 +35,7 @@ namespace RiotHangfireDemo.Web
         {
             ConfigureSimpleInjector();
             ConfigureSettings();
-            ConfigureMediator();
+            ConfigureRoutemeister();
             CongigureEntityFramework();
             ConfigureMvc(RouteTable.Routes);
             ConfigureHangfire(app);
@@ -74,13 +73,20 @@ namespace RiotHangfireDemo.Web
             Container.RegisterSingleton(config);
         }
 
-        private static void ConfigureMediator()
+        private static void ConfigureRoutemeister()
         {
             // Register all Command Handlers
             var requestType = typeof(IRequestHandler<,>);
             Container.Register(requestType, AppAssemblies);
 
-            Container.RegisterSingleton<IMediator>(() => new Mediator(Container.GetInstance, Container.GetAllInstances));
+            var factory = new Routemeister.MessageRouteFactory();
+            var routes = new Routemeister.MessageRoutes
+            {
+                factory.Create(AppAssemblies, requestType),
+            };
+            var dispatcher = new Dispatcher((t, e) => Container.GetInstance(t), routes);
+
+            Container.RegisterSingleton(() => dispatcher);
         }
 
         private static void CongigureEntityFramework()

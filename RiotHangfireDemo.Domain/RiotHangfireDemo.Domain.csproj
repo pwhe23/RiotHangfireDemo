@@ -72,9 +72,6 @@
     <PackageReference Include="Faker.Net">
       <Version>1.0.3</Version>
     </PackageReference>
-    <PackageReference Include="MediatR">
-      <Version>2.1.0</Version>
-    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
