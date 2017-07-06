@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 
 namespace RiotHangfireDemo.Domain
@@ -12,10 +13,11 @@ namespace RiotHangfireDemo.Domain
     {
         public DemoDb()
         {
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<DemoDb>());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<DemoDb, DemoDbMigrations>());
         }
 
         public DbSet<QueueItem> QueueItems { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public bool CreateDatabase()
         {
@@ -47,6 +49,33 @@ namespace RiotHangfireDemo.Domain
         public int Commit()
         {
             return SaveChanges();
+        }
+    };
+
+    internal class DemoDbMigrations : DbMigrationsConfiguration<DemoDb>
+    {
+        public DemoDbMigrations()
+        {
+            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = false;
+            MigrationsAssembly = typeof(DemoDbMigrations).Assembly;
+            MigrationsNamespace = typeof(DemoDbMigrations).Namespace;
+        }
+
+        protected override void Seed(DemoDb db)
+        {
+            var user = new User
+            {
+                Email = "paul@tagovi.com",
+                Password = PasswordHash.CreateHash("pw"),
+            };
+
+            db.Users.AddOrUpdate(x => x.Email, new[]
+            {
+                user,
+            });
+
+            db.SaveChanges();
         }
     };
 }

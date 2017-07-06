@@ -1,4 +1,5 @@
 ﻿using System.Web;
+using Microsoft.AspNet.Identity;
 using RiotHangfireDemo.Domain;
 
 namespace RiotHangfireDemo.Web
@@ -10,7 +11,7 @@ namespace RiotHangfireDemo.Web
             public override CommandResponse Handle(LogoutUser cmd)
             {
                 var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
-                authenticationManager.SignOut();
+                authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
 
                 return CommandResponse.Success();
             }

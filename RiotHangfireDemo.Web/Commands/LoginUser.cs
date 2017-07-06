@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Linq;
+using System.Security.Claims;
 using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
@@ -14,20 +15,22 @@ namespace RiotHangfireDemo.Web
 
         internal class Handler : CommandHandler<LoginUser, CommandResponse>
         {
+            private readonly IDb _db;
+
+            public Handler(IDb db)
+            {
+                _db = db;
+            }
+
             public override CommandResponse Handle(LoginUser cmd)
             {
-                if (cmd.Email.StartsWith("paul@") && !string.IsNullOrWhiteSpace(cmd.Password))
+                var user = _db
+                    .Query<User>()
+                    .SingleOrDefault(x => x.Email == cmd.Email);
+
+                if (user != null && ValidatePassword(cmd.Password, user.Password))
                 {
-                    var identity = new ClaimsIdentity(DefaultAuthenticationTypes.ApplicationCookie);
-                    identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, cmd.Email));
-
-                    var authenticationProperties = new AuthenticationProperties
-                    {
-                        IsPersistent = cmd.RememberMe,
-                    };
-
-                    var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
-                    authenticationManager.SignIn(authenticationProperties, identity);
+                    SetClaims(user.Email, cmd.RememberMe);
 
                     return CommandResponse.Success();
                 }
@@ -35,6 +38,28 @@ namespace RiotHangfireDemo.Web
                 {
                     return CommandResponse.Error("Invalid login");
                 }
+            }
+
+            private static bool ValidatePassword(string password, string correctHash)
+            {
+                if (string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(correctHash))
+                    return false;
+
+                return PasswordHash.ValidatePassword(password, correctHash);
+            }
+
+            private static void SetClaims(string email, bool rememberMe)
+            {
+                var identity = new ClaimsIdentity(DefaultAuthenticationTypes.ApplicationCookie);
+                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, email));
+
+                var authenticationProperties = new AuthenticationProperties
+                {
+                    IsPersistent = rememberMe,
+                };
+
+                var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
+                authenticationManager.SignIn(authenticationProperties, identity);
             }
         };
     };
