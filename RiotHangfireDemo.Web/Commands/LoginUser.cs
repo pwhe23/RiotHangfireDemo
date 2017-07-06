@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Web;
 using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
 using RiotHangfireDemo.Domain;
 
 namespace RiotHangfireDemo.Web
@@ -9,6 +10,7 @@ namespace RiotHangfireDemo.Web
     {
         public string Email { get; set; }
         public string Password { get; set; }
+        public bool RememberMe { get; set; }
 
         internal class Handler : CommandHandler<LoginUser, CommandResponse>
         {
@@ -19,8 +21,13 @@ namespace RiotHangfireDemo.Web
                     var identity = new ClaimsIdentity(DefaultAuthenticationTypes.ApplicationCookie);
                     identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, cmd.Email));
 
+                    var authenticationProperties = new AuthenticationProperties
+                    {
+                        IsPersistent = cmd.RememberMe,
+                    };
+
                     var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
-                    authenticationManager.SignIn(identity);
+                    authenticationManager.SignIn(authenticationProperties, identity);
 
                     return CommandResponse.Success();
                 }
