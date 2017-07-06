@@ -26,13 +26,14 @@ namespace RiotHangfireDemo.Web
         /// </summary>
         public static void Initialize(params Assembly[] assemblies)
         {
+            var requestType = typeof(IRequest<>);
             _commands = assemblies
                 .SelectMany(x => x.ExportedTypes)
                 .Where(x => x.IsClass
                             && !x.IsAbstract
                             && !x.IsInterface
                             && !x.IsNested
-                            && x.HasInterface<ICommand>())
+                            && x.HasOpenInterface(requestType))
                 .ToDictionary(x => x.Name, x => x);
         }
 

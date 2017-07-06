@@ -33,6 +33,14 @@ namespace RiotHangfireDemo.Domain
             return typeof(T).IsAssignableFrom(cls);
         }
 
+        public static bool HasOpenInterface(this Type cls, Type iface)
+        {
+            return cls
+                .GetInterfaces()
+                .Any(x => x.IsGenericType
+                          && iface.IsAssignableFrom(x.GetGenericTypeDefinition()));
+        }
+
         public static Dictionary<Type, Type> GetInterfacesWithSingleImplementation(this Assembly[] assemblies)
         {
             return assemblies

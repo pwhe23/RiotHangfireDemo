@@ -43,12 +43,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\ClearQueue.cs" />
+    <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\DeleteQueueItem.cs" />
     <Compile Include="Commands\EnqueueEmail.cs" />
     <Compile Include="Commands\EnqueueReport.cs" />
-    <Compile Include="Commands\GenerateReportTask.cs" />
+    <Compile Include="Tasks\BackgroundTask.cs" />
+    <Compile Include="Tasks\GenerateReportTask.cs" />
     <Compile Include="Commands\QueryQueueItems.cs" />
-    <Compile Include="Commands\SendEmailTask.cs" />
+    <Compile Include="Tasks\SendEmailTask.cs" />
     <Compile Include="Models\DemoDb.cs" />
     <Compile Include="Models\QueueItem.cs" />
     <Compile Include="Models\User.cs" />
