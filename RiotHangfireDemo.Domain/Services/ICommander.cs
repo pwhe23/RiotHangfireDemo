@@ -1,4 +1,6 @@
-﻿namespace RiotHangfireDemo.Domain
+﻿using System.Collections.Generic;
+
+namespace RiotHangfireDemo.Domain
 {
     /// <summary>
     /// Marker interface to be able to find all commands and queries
@@ -25,9 +27,25 @@
 
     public class CommandResponse
     {
-        public static CommandResponse Success()
+        public bool IsSuccess { get; set; }
+        public HashSet<string> Messages { get; set; }
+
+        public static CommandResponse Error(params string[] messages)
         {
-            return new CommandResponse();
+            return new CommandResponse
+            {
+                IsSuccess = false,
+                Messages = new HashSet<string>(messages),
+            };
+        }
+
+        public static CommandResponse Success(params string[] messages)
+        {
+            return new CommandResponse
+            {
+                IsSuccess = true,
+                Messages = new HashSet<string>(messages),
+            };
         }
     };
 
@@ -39,7 +57,7 @@
 
     public abstract class CommandHandler<TReq, TResp> : IRequestHandler<TReq, TResp> where TReq : IRequest<TResp>
     {
-        public abstract TResp Handle(TReq message);
+        public abstract TResp Handle(TReq cmd);
     };
 
     /// <summary>

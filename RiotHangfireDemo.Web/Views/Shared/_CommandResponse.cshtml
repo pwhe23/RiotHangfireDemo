@@ -1,0 +1,16 @@
+﻿@model dynamic
+@{
+    var commandResponse = ViewData["_CommandResponse"] as RiotHangfireDemo.Domain.CommandResponse;
+}
+@if (commandResponse?.IsSuccess == true && commandResponse.Messages.Count > 0)
+{
+    <div class="alert alert-success">
+        @Html.Raw(string.Join("<br />", commandResponse.Messages))
+    </div>
+}
+else if (commandResponse?.IsSuccess == false && commandResponse.Messages.Count > 0)
+{
+    <div class="alert alert-danger">
+        @Html.Raw(string.Join("<br />", commandResponse.Messages))
+    </div>
+}

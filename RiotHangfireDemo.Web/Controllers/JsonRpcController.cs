@@ -8,6 +8,7 @@ namespace RiotHangfireDemo.Web
     /// <summary>
     /// For simplification purposes this is not to the JsonRpc spec.
     /// </summary>
+    [Authorize]
     public class JsonRpcController : Controller
     {
         private readonly ICommander _commander;

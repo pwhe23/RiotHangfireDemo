@@ -4,7 +4,9 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Hangfire;
+using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
+using Microsoft.Owin.Security.Cookies;
 using Owin;
 using RiotHangfireDemo.Domain;
 using RiotHangfireDemo.Web;
@@ -33,6 +35,7 @@ namespace RiotHangfireDemo.Web
         // Called during OwinStartup phase
         public void Configuration(IAppBuilder app)
         {
+            ConfigureAuthentication(app);
             ConfigureSimpleInjector();
             ConfigureSettings();
             ConfigureRoutemeister();
@@ -44,6 +47,15 @@ namespace RiotHangfireDemo.Web
             Container.Verify();
 
             Commander.Initialize(AppAssemblies);
+        }
+
+        private static void ConfigureAuthentication(IAppBuilder app)
+        {
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+                LoginPath = new PathString("/Home/Login"),
+            });
         }
 
         private static void ConfigureSimpleInjector()
@@ -127,7 +139,13 @@ namespace RiotHangfireDemo.Web
                 WorkerCount = config.HangfireWorkerCount,
             });
 
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions());
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[]
+                {
+                    new AuthorizationFilter(),
+                },
+            });
         }
 
         private static void ConfigureSignalr(IAppBuilder app)
