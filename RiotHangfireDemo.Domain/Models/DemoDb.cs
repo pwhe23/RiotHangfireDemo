@@ -64,14 +64,23 @@ namespace RiotHangfireDemo.Domain
 
         protected override void Seed(DemoDb db)
         {
-            var user = new User
+            var admin = new User
             {
                 Email = "paul@tagovi.com",
                 Password = PasswordHash.CreateHash("pw"),
+                Role = User.ADMIN,
+            };
+
+            var user = new User
+            {
+                Email = "user@tagovi.com",
+                Password = PasswordHash.CreateHash("pw"),
+                Role = User.USER,
             };
 
             db.Users.AddOrUpdate(x => x.Email, new[]
             {
+                admin,
                 user,
             });
 

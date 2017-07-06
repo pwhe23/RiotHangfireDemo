@@ -1,0 +1,52 @@
+﻿@{
+    var items = new[]
+    {
+        new { Url = "/", Text = "Tasks", Role = "*" },
+        new { Url = "/hangfire", Text = "Hangfire", Role = "Admin" },
+        new { Url = "/Home/Logout", Text = "Logout", Role = "*" },
+    };
+}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Riot Hangfire Demo</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                @foreach (var item in items)
+                {
+                    if (HasPermission(item.Role))
+                    {
+                        var cls = item.Url.Equals(Request.Path, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+                        <li class="@cls">
+                            <a href="@item.Url">@item.Text</a>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</nav>
+@functions
+{
+    private bool HasPermission(string role)
+    {
+        if (string.IsNullOrWhiteSpace(role))
+        {
+            return true;
+        } else if (!Request.IsAuthenticated)
+        {
+            return false;
+        }
+        else
+        {
+            return role == "*" || User.IsInRole(role);
+        }
+    }
+}

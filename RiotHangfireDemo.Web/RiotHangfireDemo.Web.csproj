@@ -246,7 +246,7 @@
     <Compile Include="Services\Commander.cs" />
     <Compile Include="Services\Pusher.cs" />
     <Compile Include="Services\Clock.cs" />
-    <Compile Include="Utility\AuthorizationFilter.cs" />
+    <Compile Include="Utility\HangfireDashboardAuthorizationFilter.cs" />
     <Compile Include="Utility\Dispatcher.cs" />
     <Compile Include="Utility\HangfireJobPusher.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -299,6 +299,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Views\Shared\_CommandResponse.cshtml" />
+    <Content Include="Views\Shared\_Navbar.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

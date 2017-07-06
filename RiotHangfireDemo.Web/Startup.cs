@@ -32,7 +32,7 @@ namespace RiotHangfireDemo.Web
 
         public static string Version { get; } = Guid.NewGuid().ToString("N"); //browser cachebuster
 
-        // Called during OwinStartup phase
+        // Called automatically during OwinStartup phase
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuthentication(app);
@@ -143,7 +143,7 @@ namespace RiotHangfireDemo.Web
             {
                 Authorization = new[]
                 {
-                    new AuthorizationFilter(),
+                    new HangfireDashboardAuthorizationFilter(),
                 },
             });
         }

@@ -30,7 +30,7 @@ namespace RiotHangfireDemo.Web
 
                 if (user != null && ValidatePassword(cmd.Password, user.Password))
                 {
-                    SetClaims(user.Email, cmd.RememberMe);
+                    SetClaims(user.Email, cmd.RememberMe, user.Role);
 
                     return CommandResponse.Success();
                 }
@@ -48,10 +48,11 @@ namespace RiotHangfireDemo.Web
                 return PasswordHash.ValidatePassword(password, correctHash);
             }
 
-            private static void SetClaims(string email, bool rememberMe)
+            private static void SetClaims(string email, bool rememberMe, string role)
             {
                 var identity = new ClaimsIdentity(DefaultAuthenticationTypes.ApplicationCookie);
-                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, email));
+                identity.AddClaim(new Claim(ClaimTypes.Name, email));
+                identity.AddClaim(new Claim(ClaimTypes.Role, role));
 
                 var authenticationProperties = new AuthenticationProperties
                 {

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace RiotHangfireDemo.Domain
 {
     [Table(nameof(User))]
-    public class User
+    internal class User
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -14,5 +14,11 @@ namespace RiotHangfireDemo.Domain
 
         [StringLength(200, MinimumLength = 8), Required]
         public string Password { get; set; }
+
+        [StringLength(25)]
+        public string Role { get; set; }
+
+        public const string ADMIN = "Admin";
+        public const string USER = "User";
     };
 }
