@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -56,6 +58,23 @@ namespace RiotHangfireDemo.Web
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Home/Login"),
             });
+
+            // Populate UserContext with identity claims UserId
+            app.Use(async (owinContext, next) =>
+            {
+                var userContext = Container.GetInstance<UserContext>();
+
+                userContext.UserId = owinContext
+                    .Authentication
+                    .User
+                    .Claims
+                    .Where(x => x.Type == ClaimTypes.NameIdentifier)
+                    .Select(x => x.Value)
+                    .SingleOrDefault()
+                    .ToInt();
+
+                await next.Invoke();
+            });
         }
 
         private static void ConfigureSimpleInjector()
@@ -74,6 +93,7 @@ namespace RiotHangfireDemo.Web
             }
 
             Container.Register<IDb, DemoDb>(Lifestyle.Scoped); //Domain InternalsVisibleTo
+            Container.Register<UserContext>(Lifestyle.Scoped);
 
             Container.RegisterMvcControllers(AppAssemblies);
         }

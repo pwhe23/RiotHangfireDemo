@@ -11,21 +11,28 @@ namespace RiotHangfireDemo.Web
     /// </summary>
     public class Queue : IQueue
     {
-        private readonly IDb _db;
-        private readonly ICommander _commander;
         private readonly IClock _clock;
+        private readonly ICommander _commander;
+        private readonly IDb _db;
+        private readonly UserContext _userContext;
 
-        public Queue(IDb db, ICommander commander, IClock clock)
+        public Queue(IClock clock, ICommander commander, IDb db, UserContext userContext)
         {
-            _db = db;
-            _commander = commander;
             _clock = clock;
+            _commander = commander;
+            _db = db;
+            _userContext = userContext;
         }
 
         public void Enqueue(BackgroundTask task)
         {
             if (task == null)
                 return;
+
+            if (task.UserId == null)
+            {
+                task.UserId = _userContext.UserId;
+            }
 
             var queuedTask = new QueueItem
             {

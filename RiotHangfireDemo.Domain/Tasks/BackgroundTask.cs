@@ -6,6 +6,7 @@
     /// </summary>
     public abstract class BackgroundTask : IRequest<TaskResult>
     {
+        public int? UserId { get; set; }
         public virtual string Name => GetType().Name;
     };
 

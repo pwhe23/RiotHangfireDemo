@@ -28,6 +28,11 @@ namespace RiotHangfireDemo.Domain
             }
         }
 
+        public static int? ToInt(this string value)
+        {
+            return int.TryParse(value, out int result) ? result : (int?) null;
+        }
+
         public static bool HasInterface<T>(this Type cls)
         {
             return typeof(T).IsAssignableFrom(cls);
