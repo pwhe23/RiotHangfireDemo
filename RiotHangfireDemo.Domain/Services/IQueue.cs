@@ -6,5 +6,6 @@
     public interface IQueue
     {
         void Enqueue(BackgroundTask task);
+        void Requeue(int queueItemId);
     };
 }

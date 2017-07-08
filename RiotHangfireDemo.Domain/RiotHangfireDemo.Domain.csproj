@@ -47,6 +47,7 @@
     <Compile Include="Commands\DeleteQueueItem.cs" />
     <Compile Include="Commands\EnqueueEmail.cs" />
     <Compile Include="Commands\EnqueueReport.cs" />
+    <Compile Include="Commands\RequeueTasks.cs" />
     <Compile Include="Services\UserContext.cs" />
     <Compile Include="Tasks\BackgroundTask.cs" />
     <Compile Include="Tasks\GenerateReportTask.cs" />

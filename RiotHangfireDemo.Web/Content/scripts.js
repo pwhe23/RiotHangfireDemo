@@ -1,4 +1,5 @@
 ﻿function jsonRpc(command, obj, success, error) {
+    //console.log(command, obj);
     $.ajax({
         type: "POST",
         contentType: "application/json",
@@ -6,8 +7,8 @@
         url: "/jsonrpc/" + command,
         data: JSON.stringify(obj || {}),
         success: function (data) {
-            if (data.Errors && data.Errors.length) {
-                alert("ERROR: " + data.Errors.join("\n"));
+            if ("IsSuccess" in data && !data.IsSuccess) {
+                if (data.Messages.length) alert("ERROR: " + data.Messages.join("\n"));
                 if (error) error(data);
             } else {
                 if (success) success(data);

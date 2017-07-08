@@ -3,6 +3,9 @@
         <CommandButton command="EnqueueEmail" text="Enqueue Email" />
         <CommandButton command="EnqueueReport" text="Enqueue Report" />
         <CommandButton command="ClearQueue" text="Clear Queue" confirm="Are you sure?" />
+        <CommandButton command="RequeueTasks" if={ selectedTasks.length > 0 } data={ {TaskIds:selectedTasks} } cls="btn btn-warning">
+            <span>Requeue { data.TaskIds.length } Tasks</span>
+        </CommandButton>
     </div>
     <div if="{ result.Items.length == 0 && !result.PageNumber }" class="lead">
         <i class="fa fa-spinner fa-pulse fa-fw"></i> Loading
@@ -10,6 +13,7 @@
     <table if="{ result.Items.length > 0 }" class="table table-hover small">
         <thead>
             <tr>
+                <th>&nbsp;</th>
                 <th class="text-center">Id</th>
                 <th>Name</th>
                 <th>Created</th>
@@ -22,7 +26,8 @@
         </thead>
         <tbody>
             <tr each={ item in result.Items }>
-                <td class="text-center">{ item.Id }</td>
+                <td><input type="checkbox" click={ clicked } /></td>
+                <td>{ item.Id }</td>
                 <td>{ item.Name }</td>
                 <td>{ moment(item.Created).fromNow(); }</td>
                 <td>
@@ -52,11 +57,13 @@
     <script>
         var vm = this;
         vm.queryQueueItems = { PageNumber:1, PageSize:10 };
-        vm.result = { Items:[] };
+        vm.result = { Items: [] };
+        vm.selectedTasks = [];
 
         function load() {
             jsonRpc("QueryQueueItems", vm.queryQueueItems, function (result) {
                 vm.result = result;
+                vm.selectedTasks = [];
                 vm.update();
             });
         }
@@ -77,6 +84,18 @@
             vm.queryQueueItems.PageNumber = pageNumber;
             load();
         });
+
+        vm.clicked = function (e) {
+            e.item.item.selected = $(e.currentTarget).prop("checked");
+            if (e.item.item.selected) {
+                vm.selectedTasks.push(e.item.item.Id);
+            }
+            else {
+                var index = vm.selectedTasks.indexOf(e.item.item.Id);
+                if (index > -1) vm.selectedTasks.splice(index, 1);
+            }
+            vm.update();
+        };
 
         load();
     </script>

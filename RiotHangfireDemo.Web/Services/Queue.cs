@@ -34,19 +34,38 @@ namespace RiotHangfireDemo.Web
                 task.UserId = _userContext.UserId;
             }
 
-            var queuedTask = new QueueItem
+            var queueItem = new QueueItem
             {
-                Name = task.Name,
-                Status = QueueItem.QUEUED,
                 Created = _clock.Now(),
+                Name = task.Name,
                 Type = task.GetType().Name,
                 Data = JsonConvert.SerializeObject(task),
             };
 
-            _db.Add(queuedTask);
+            _db.Add(queueItem);
+
+            EnqueueItemInHangfire(queueItem);
+        }
+
+        public void Requeue(int queueItemId)
+        {
+            var queueItem = _db
+                .Query<QueueItem>()
+                .Single(x => x.Id == queueItemId);
+
+            EnqueueItemInHangfire(queueItem);
+        }
+
+        private void EnqueueItemInHangfire(QueueItem queueItem)
+        {
+            queueItem.Status = QueueItem.QUEUED;
+            queueItem.Started = null;
+            queueItem.Completed = null;
+            queueItem.Log = null;
+
             _db.Commit();
 
-            BackgroundJob.Enqueue(() => Execute(queuedTask.Id));
+            BackgroundJob.Enqueue(() => Execute(queueItem.Id));
         }
 
         //REF: http://docs.hangfire.io/en/latest/best-practices.html#make-job-arguments-small-and-simple
@@ -61,6 +80,7 @@ namespace RiotHangfireDemo.Web
 
             queueItem.Status = QueueItem.RUNNING;
             queueItem.Started = _clock.Now();
+
             _db.Commit();
 
             try

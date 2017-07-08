@@ -163,7 +163,7 @@ namespace RiotHangfireDemo.Web
             {
                 Authorization = new[]
                 {
-                    new HangfireDashboardAuthorizationFilter(),
+                    new DemoHangfireAuthorizationFilter(),
                 },
             });
         }

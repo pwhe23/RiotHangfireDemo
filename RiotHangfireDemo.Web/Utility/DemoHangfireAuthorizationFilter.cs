@@ -4,7 +4,7 @@ using RiotHangfireDemo.Domain;
 
 namespace RiotHangfireDemo.Web
 {
-    public class HangfireDashboardAuthorizationFilter : IDashboardAuthorizationFilter
+    public class DemoHangfireAuthorizationFilter : IDashboardAuthorizationFilter
     {
         public bool Authorize(DashboardContext dashboardContext)
         {
