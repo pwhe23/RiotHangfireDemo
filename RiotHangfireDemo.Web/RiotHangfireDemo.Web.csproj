@@ -300,6 +300,7 @@
   <ItemGroup>
     <None Include="Views\Shared\_CommandResponse.cshtml" />
     <Content Include="Views\Shared\_Navbar.cshtml" />
+    <Content Include="Views\Tags\SelectAll.tag" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

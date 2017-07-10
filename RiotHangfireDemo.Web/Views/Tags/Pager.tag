@@ -5,7 +5,7 @@
     <nav aria-label="Page navigation" if={ !!pageNumber }>
         <ul class="pagination">
             <li if={ hasPrevious }>
-                <span class="button" aria-label="Previous" onClick={ previousClicked }>
+                <span class="button" aria-label="Previous" onclick={ previousClicked }>
                     <span aria-hidden="true">&larr; Previous</span>
                 </span>
             </li>
@@ -23,7 +23,7 @@
                 </span>
             </li>
             <li if={ hasNext }>
-                <span class="button" aria-label="Next" onClick={ nextClicked }>
+                <span class="button" aria-label="Next" onclick={ nextClicked }>
                     <span aria-hidden="true">Next &rarr;</span>
                 </span>
             </li>

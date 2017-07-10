@@ -21,7 +21,7 @@
     <table if="{ result.Items.length > 0 }" class="table table-hover small">
         <thead>
             <tr>
-                <th>&nbsp;</th>
+                <th><SelectAll selector=".select-item" /></th>
                 <th class="text-center">Id</th>
                 <th>Name</th>
                 <th>Created</th>
@@ -34,7 +34,7 @@
         </thead>
         <tbody>
             <tr each={ item in result.Items }>
-                <td><input type="checkbox" click={ clicked } /></td>
+                <td><input type="checkbox" onclick={ itemSelected } class="select-item" /></td>
                 <td>{ item.Id }</td>
                 <td>{ item.Name }</td>
                 <td>{ moment(item.Created).fromNow(); }</td>
@@ -93,7 +93,7 @@
             load();
         });
 
-        vm.clicked = function (e) {
+        vm.itemSelected = function (e) {
             e.item.item.selected = $(e.currentTarget).prop("checked");
             if (e.item.item.selected) {
                 vm.selectedTasks.push(e.item.item.Id);
