@@ -1,11 +1,19 @@
 ﻿<ListQueueItems>
-    <div class="commandbar">
+    <div class="commandbar form-inline">
         <CommandButton command="EnqueueEmail" text="Enqueue Email" />
         <CommandButton command="EnqueueReport" text="Enqueue Report" />
         <CommandButton command="ClearQueue" text="Clear Queue" confirm="Are you sure?" />
-        <CommandButton command="RequeueTasks" if={ selectedTasks.length > 0 } data={ {TaskIds:selectedTasks} } cls="btn btn-warning">
-            <span>Requeue { data.TaskIds.length } Tasks</span>
-        </CommandButton>
+        <span if={ selectedTasks.length > 0 }>
+            <CommandButton command="RequeueItems" cls="btn btn-warning" data={ {ItemIds:selectedTasks} }>
+                <span>Requeue { data.ItemIds.length } Tasks</span>
+            </CommandButton>
+            <span class="input-group">
+                <input ref="Log" type="text" class="form-control" />
+                <span class="input-group-btn">
+                    <CommandButton command="SetQueueItemLog" text="Set Log(s)" cls="btn btn-warning" data={ {ItemIds:selectedTasks} } />
+                </span>
+            </span>
+        </span>
     </div>
     <div if="{ result.Items.length == 0 && !result.PageNumber }" class="lead">
         <i class="fa fa-spinner fa-pulse fa-fw"></i> Loading
@@ -102,7 +110,6 @@
     <style>
         .lead { margin-top: 14px; }
         .commandbar { margin: 15px 0; }
-        .commandbar button { margin-right: 25px; }
         .table { margin:0; }
         table p { padding:.5em; margin:0; }
     </style>

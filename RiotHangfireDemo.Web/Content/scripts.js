@@ -30,3 +30,17 @@ function stringify(o) {
         return value;
     });
 }
+
+/// Riot.js serialize all inputs in the refs collection to an object
+function SerializeRefs(refs, data) {
+    data = data || {};
+    for (var ref in refs) {
+        if (refs.hasOwnProperty(ref)) {
+            var input = refs[ref];
+            if ("value" in input && String(input.value).length > 0) {
+                data[ref] = input.value;
+            }
+        }
+    }
+    return data;
+}

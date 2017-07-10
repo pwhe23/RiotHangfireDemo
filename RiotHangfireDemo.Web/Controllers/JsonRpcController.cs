@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using RiotHangfireDemo.Domain;
@@ -28,7 +29,7 @@ namespace RiotHangfireDemo.Web
         {
             var commandJson = Request.InputStream.ReadToEnd();
 
-            var result = _commander.Execute(commandName, commandJson);
+            var result = Execute(commandName, commandJson);
 
             return new ContentResult
             {
@@ -48,13 +49,25 @@ namespace RiotHangfireDemo.Web
             var queryString = Request.QueryString.AllKeys.ToDictionary(x => x, x => Request.QueryString[x]);
             var commandJson = JsonConvert.SerializeObject(queryString);
 
-            var result = _commander.Execute(commandName, commandJson);
+            var result = Execute(commandName, commandJson);
 
             return new ContentResult
             {
                 Content = JsonConvert.SerializeObject(result),
                 ContentType = "application/json",
             };
+        }
+
+        private object Execute(string commandName, string commandJson)
+        {
+            try
+            {
+                return _commander.Execute(commandName, commandJson);
+            }
+            catch (Exception ex)
+            {
+                return CommandResponse.Error(ex.ToString());
+            }
         }
     };
 }
