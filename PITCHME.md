@@ -1,5 +1,5 @@
 
-# Background Tasks in Asp.net using Hangfire and Riot.js
+#### Background Tasks in Asp.net using Hangfire and Riot.js
 
 Paul Wheeler <paul@paulwheeler.com>
 
@@ -24,8 +24,6 @@ https://github.com/pwhe23/RiotHangfireDemo
 ---
 
 #### Hangfire.io
-
-Hangfire is an easy way to perform background processing in .NET and .NET Core applications. No Windows Service or separate process required. It is backed by persistent storage and open and free for commercial use.
 
 - Supports: Asp.net, web apps, console apps, Windows services, etc
 - Job Types: Fire-and-forget, delayed, and recurring
@@ -83,8 +81,6 @@ http://docs.hangfire.io/en/latest/
 
 #### Riot.js
 
-Riot.js is a simple and elegant component-based UI library that brings custom tags to all browsers. A custom tag glues relevant HTML and JavaScript together forming a reusable component.
-
 - Custom tags - supports attributes, expressions, scripts, styles
 - Mixins: shared, global
 - Nested tags
@@ -99,12 +95,14 @@ Riot.js is a simple and elegant component-based UI library that brings custom ta
 http://riotjs.com/guide/
 
 - riot.mount("*")
-- <CommandButton command="RequeueItems" data={ {ItemIds:selectedTasks} } />
+- \<CommandButton command="RequeueItems" data={ {ItemIds:selectedTasks} } /\>
 - if={ hasPrevious }, show={ truthy }, hide={ truthy }
 - each={ item in result.Items }
 - ListQueueItems: ref="Log"
 - onclick={ nextClicked }
 - Tags - CommandButton, ListQueueItems, Pager, SelectAll
+
+---
 
 #### Riot - more
 
