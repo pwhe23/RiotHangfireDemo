@@ -34,8 +34,6 @@ https://github.com/pwhe23/RiotHangfireDemo
 
 #### Hangfire Parts
 
-http://docs.hangfire.io/en/latest/
-
 1. Client - BackgroundJobClient instance, or BackgroundJob static
 2. Persistent Storage - Redis, SQL Server (including Azure); supports MSMQ, RabbitMQ
 3. Server - BackgroundJobServer, app.UseHangfireServer; same process, separate server, multiple instances
@@ -73,7 +71,6 @@ http://docs.hangfire.io/en/latest/
 - DemoConfig - strongly-typed AppSettings class
 - Pusher - sends notifications to client (SignalR)
 - Identity - ConfigureAuthentication, User, LoginUser, LogoutUser, PasswordHash
-- Content - bootstrap, font-awesome, jquery, moment, riot
 - Controllers - HomeController, JsonRpcController, PushHub
 - Views - Index, Login, _Layout, _Navbar, _CommandResponse
 
@@ -84,7 +81,7 @@ http://docs.hangfire.io/en/latest/
 - Custom tags - supports attributes, expressions, scripts, styles
 - Mixins: shared, global
 - Nested tags
-- Transclusion - <yield />
+- Transclusion - &lt;yield /&gt;
 - Supports server-side rendering
 - Virtual tag, data-is attribute
 
@@ -92,10 +89,8 @@ http://docs.hangfire.io/en/latest/
 
 #### Riot Syntax
 
-http://riotjs.com/guide/
-
 - riot.mount("*")
-- \<CommandButton command="RequeueItems" data={ {ItemIds:selectedTasks} } /\>
+- &lt;CommandButton command="RequeueItems" data={ {ItemIds:selectedTasks} } /&gt;
 - if={ hasPrevious }, show={ truthy }, hide={ truthy }
 - each={ item in result.Items }
 - ListQueueItems: ref="Log"
@@ -111,6 +106,8 @@ http://riotjs.com/guide/
 - Classes: string, shorthand, objects
 - Styles: string, objects
 - Simple debugging
+
+---
 
 #### Testing
 
