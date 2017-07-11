@@ -247,15 +247,14 @@
     <Compile Include="Services\Pusher.cs" />
     <Compile Include="Services\Clock.cs" />
     <Compile Include="Utility\DemoHangfireAuthorizationFilter.cs" />
-    <Compile Include="Utility\Dispatcher.cs" />
-    <Compile Include="Utility\HangfireJobPusher.cs" />
+    <Compile Include="Utility\DemoHangfireJobFilter.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Queue.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Services\Randomizer.cs" />
     <Compile Include="Utility\HtmlHelpers.cs" />
-    <Compile Include="Utility\SimpleInjectorJobActivator.cs" />
+    <Compile Include="Utility\HangfireSimpleInjectorJobActivator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

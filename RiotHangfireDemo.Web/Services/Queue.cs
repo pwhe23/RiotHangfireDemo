@@ -7,7 +7,7 @@ using RiotHangfireDemo.Domain;
 namespace RiotHangfireDemo.Web
 {
     /// <summary>
-    /// Queue can Enqueue tasks to be executed by Hangfire.
+    /// Queue can Enqueue BackgroundTasks to be executed by Hangfire.
     /// </summary>
     public class Queue : IQueue
     {
@@ -70,7 +70,7 @@ namespace RiotHangfireDemo.Web
 
         //REF: http://docs.hangfire.io/en/latest/best-practices.html#make-job-arguments-small-and-simple
         /// <summary>
-        /// Called on a background thread by Hangfire.
+        /// Called on a background thread by Hangfire, keep parameters simple for serialization.
         /// </summary>
         public void Execute(int queueItemId)
         {

@@ -84,6 +84,7 @@ namespace RiotHangfireDemo.Web
                 new ThreadScopedLifestyle(),
                 new WebRequestLifestyle()
             );
+            Container.Options.AllowOverridingRegistrations = true; // ICommander
 
             // Automatically register any interface with only a single implementation
             var services = AppAssemblies.GetInterfacesWithSingleImplementation();
@@ -107,18 +108,20 @@ namespace RiotHangfireDemo.Web
 
         private static void ConfigureRoutemeister()
         {
-            // Register all Command Handlers
+            // Register all Command Handlers in IoC
             var requestType = typeof(IRequestHandler<,>);
             Container.Register(requestType, AppAssemblies);
 
+            // Map commands to handlers
             var factory = new Routemeister.MessageRouteFactory();
             var routes = new Routemeister.MessageRoutes
             {
                 factory.Create(AppAssemblies, requestType),
             };
-            var dispatcher = new Dispatcher((t, e) => Container.GetInstance(t), routes);
 
-            Container.RegisterSingleton(() => dispatcher);
+            // Register Commander
+            var commander = new Commander((t, e) => Container.GetInstance(t), routes);
+            Container.RegisterSingleton<ICommander>(() => commander);
         }
 
         private static void CongigureEntityFramework()
@@ -149,8 +152,8 @@ namespace RiotHangfireDemo.Web
             //REF: http://docs.hangfire.io/en/latest/quick-start.html
             GlobalConfiguration.Configuration
                 .UseSqlServerStorage(nameof(DemoDb))
-                .UseActivator(new SimpleInjectorJobActivator(Container, Lifestyle.Scoped))
-                .UseFilter(new HangfireJobPusher(Container.GetInstance<IPusher>()))
+                .UseActivator(new HangfireSimpleInjectorJobActivator(Container, Lifestyle.Scoped))
+                .UseFilter(new DemoHangfireJobFilter(Container.GetInstance<IPusher>()))
                 .UseFilter(new AutomaticRetryAttribute { Attempts = 1 });
 
             app.UseHangfireServer(new BackgroundJobServerOptions

@@ -11,17 +11,17 @@ namespace RiotHangfireDemo.Web
     /// I couldn't get the HangFire.SimpleInjector Nuget package to work with the new
     /// ThreadScopedLifestyle so I copied the source here and fixed it.
     /// </summary>
-    public class SimpleInjectorJobActivator : JobActivator
+    public class HangfireSimpleInjectorJobActivator : JobActivator
     {
         private readonly Container _container;
         private readonly Lifestyle _lifestyle;
 
-        public SimpleInjectorJobActivator(Container container)
+        public HangfireSimpleInjectorJobActivator(Container container)
         {
             _container = container;
         }
 
-        public SimpleInjectorJobActivator(Container container, Lifestyle lifestyle)
+        public HangfireSimpleInjectorJobActivator(Container container, Lifestyle lifestyle)
         {
             _container = container;
             _lifestyle = lifestyle;

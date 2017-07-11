@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using Microsoft.AspNet.Identity;
 using RiotHangfireDemo.Domain;
 
@@ -10,10 +11,18 @@ namespace RiotHangfireDemo.Web
         {
             public override CommandResponse Handle(LogoutUser cmd)
             {
-                var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
-                authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                try
+                {
+                    var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
 
-                return CommandResponse.Success();
+                    authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+
+                    return CommandResponse.Success();
+                }
+                catch (Exception ex)
+                {
+                    return CommandResponse.Error(ex);
+                }
             }
         };
     };

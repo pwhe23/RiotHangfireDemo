@@ -1,16 +1,15 @@
 ﻿@model dynamic
 @{
     var commandResponse = ViewData["_CommandResponse"] as RiotHangfireDemo.Domain.CommandResponse;
+    var messages = commandResponse?.Messages?.Count > 0
+        ? string.Join("<br />", commandResponse.Messages)
+        : null;
 }
-@if (commandResponse?.IsSuccess == true && commandResponse.Messages.Count > 0)
+@if (commandResponse?.IsSuccess == true && messages != null)
 {
-    <div class="alert alert-success">
-        @Html.Raw(string.Join("<br />", commandResponse.Messages))
-    </div>
+    <pre class="alert alert-success message">@Html.Raw(messages)</pre>
 }
-else if (commandResponse?.IsSuccess == false && commandResponse.Messages.Count > 0)
+else if (commandResponse?.IsSuccess == false && messages != null)
 {
-    <div class="alert alert-danger">
-        @Html.Raw(string.Join("<br />", commandResponse.Messages))
-    </div>
+    <pre class="alert alert-danger message">@Html.Raw(messages)</pre>
 }

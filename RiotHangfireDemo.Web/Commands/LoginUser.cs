@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Web;
 using Microsoft.AspNet.Identity;
@@ -28,15 +29,18 @@ namespace RiotHangfireDemo.Web
                     .Query<User>()
                     .SingleOrDefault(x => x.Email == cmd.Email);
 
-                if (user != null && ValidatePassword(cmd.Password, user.Password))
+                try
                 {
+                    if (user == null || !ValidatePassword(cmd.Password, user.Password))
+                        throw new ApplicationException("Invalid login");
+
                     SetClaims(user, cmd.RememberMe);
 
                     return CommandResponse.Success();
                 }
-                else
+                catch (Exception ex)
                 {
-                    return CommandResponse.Error("Invalid login");
+                    return CommandResponse.Error(ex);
                 }
             }
 

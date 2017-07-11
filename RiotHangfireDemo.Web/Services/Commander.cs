@@ -14,11 +14,14 @@ namespace RiotHangfireDemo.Web
     public class Commander : ICommander
     {
         private static Dictionary<string, Type> _commands;
-        private readonly Dispatcher _dispatcher;
 
-        public Commander(Dispatcher dispatcher)
+        private readonly Routemeister.MessageHandlerCreator _messageHandlerCreator;
+        private readonly Routemeister.MessageRoutes _messageRoutes;
+
+        public Commander(Routemeister.MessageHandlerCreator messageHandlerCreator, Routemeister.MessageRoutes messageRoutes)
         {
-            _dispatcher = dispatcher;
+            _messageHandlerCreator = messageHandlerCreator;
+            _messageRoutes = messageRoutes;
         }
 
         /// <summary>
@@ -96,9 +99,18 @@ namespace RiotHangfireDemo.Web
         /// Pass-through to MediatR, provided so ICommander can be injected everywhere
         /// in favor of IMediator.
         /// </summary>
-        public TResponse Send<TResponse>(IRequest<TResponse> command)
+        public TResponse Send<TResponse>(IRequest<TResponse> request)
         {
-            return _dispatcher.Send(command);
+            var route = _messageRoutes.GetRoute(request.GetType());
+            if (route.Actions.Length != 1)
+                throw new ArgumentException($"The request '{route.MessageType.FullName}' reqires a single route.", nameof(request));
+
+            var action = route.Actions[0];
+            var envelope = new Routemeister.MessageEnvelope(request, route.MessageType);
+            var creator = _messageHandlerCreator(action.HandlerType, envelope);
+            var result = (TResponse)action.Invoke(creator, envelope.Message);
+
+            return result;
         }
     };
 }

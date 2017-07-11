@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace RiotHangfireDemo.Domain
 {
@@ -19,6 +20,11 @@ namespace RiotHangfireDemo.Domain
     {
         public bool IsSuccess { get; set; }
         public HashSet<string> Messages { get; set; }
+
+        public static CommandResponse Error(Exception ex)
+        {
+            return Error(ex.ToString());
+        }
 
         public static CommandResponse Error(params string[] messages)
         {
