@@ -121,3 +121,4 @@ https://github.com/pwhe23/RiotHangfireDemo
 - https://github.com/pwhe23/RiotHangfireDemo
 - http://docs.hangfire.io/en/latest/
 - http://riotjs.com/guide/
+- http://crackstation.net/hashing-security.htm

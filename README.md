@@ -5,6 +5,9 @@ Demo Asp.net application using Riot.js and Hangfire.io created for a talk at Mod
 
 ![Screenshot](screenshot.jpg)
 
+Presentation: 
+[![GitPitch](https://gitpitch.com/assets/badge.svg)](https://gitpitch.com/pwhe23/RiotHangfireDemo/master?grs=github&t=white)
+
 ## RiotHangfireDemo.Web
 
 RiotHangfireDemo.Web is an standard Asp.net MVC website which bootstraps and hosts our application. The views are created using Riot.js, so there is only a single Home/Index controller action. SignalR is used for notifying the user-interface of job status changes from Hangfire. The service interface implementations also reside here to keep as much external code out of our Domain project as possible.
